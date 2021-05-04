@@ -15,11 +15,11 @@ namespace DrakulasSlott
     internal static class Program
     {
         /// <summary>
-        /// The Main.
+        /// The Main method.
         /// </summary>
         internal static void Main()
         {
-            while (DrakulasSlott.Run() == 1) ;
+            while (DrakulasSlott.Run() == 1);
         }
     }
 }
