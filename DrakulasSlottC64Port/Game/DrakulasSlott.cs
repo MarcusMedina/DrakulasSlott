@@ -162,7 +162,7 @@ namespace DrakulasSlott.Game
             Print("JAG SER ", false);
             for (X = 1; X <= 22; X++)
             {
-                if ((La[X] == L2))
+                if (La[X] == L2)
                 {
                     Print(" *" + Osa[X + 6], false);
                     Y++;
@@ -512,7 +512,7 @@ namespace DrakulasSlott.Game
             }
 
             // 695 IF(L(14)<>L)THEN765
-            if ((La[14] != L))
+            if (La[14] != L)
             {
                 goto Row765;
             }
@@ -573,7 +573,7 @@ namespace DrakulasSlott.Game
 
         // 760 IF (L(S-6)=L)THEN780
         Row760:
-            if ((La[S - 6] == L))
+            if (La[S - 6] == L)
             {
                 goto Row780;
             }
@@ -799,7 +799,7 @@ namespace DrakulasSlott.Game
             Gosub360();
 
             // 1070 IF A$="TR"OR A$="PÅ"AND L(10)=0AND O$(16)="TRÄPÅLAR" THEN 1090
-            if (As == "TR" || As == "PÅ" && La[10] == 0 && Osa[16] == "TRÄPÅLAR")
+            if ((As == "TR" || As == "PÅ") && La[10] == 0 && Osa[16] == "TRÄPÅLAR")
             {
                 goto Row1090;
             }
