@@ -184,7 +184,7 @@ namespace DrakulasSlott.Game
             Print();
             Print();
 
-// 310 PRINT"SYNLIGA UTGÅNGAR - ";:FORX=1TO6:IFP(L,X)>0THENPRINTO$(X);"* ";
+            // 310 PRINT"SYNLIGA UTGÅNGAR - ";:FORX=1TO6:IFP(L,X)>0THENPRINTO$(X);"* ";
             Print("SYNLIGA UTGÅNGAR - ", false);
             for (X = 1; X <= 6; X++)
             {

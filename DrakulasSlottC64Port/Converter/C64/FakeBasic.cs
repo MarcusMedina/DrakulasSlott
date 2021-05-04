@@ -61,10 +61,12 @@ namespace MarcusMedinaPro.Converter.C64
 #pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable IDE0060 // Remove unused parameter
 #pragma warning disable RCS1163 // Unused parameter.
+
         public static void BorderColor(C64Colors color)
         {
             // Method intentionally left empty. Will be implemented later
         }
+
 #pragma warning restore RCS1163 // Unused parameter.
 #pragma warning restore IDE0060 // Remove unused parameter
 #pragma warning restore IDE0079 // Remove unnecessary suppression
@@ -217,8 +219,7 @@ namespace MarcusMedinaPro.Converter.C64
             {
                 var petscIICode = ch;
 
-                
-// hint: https://www.c64-wiki.com/images/a/a2/Zeichensatz-c64-poke2.jpg
+                // hint: https://www.c64-wiki.com/images/a/a2/Zeichensatz-c64-poke2.jpg
                 petscIICode = GetpetscIICode(ch);
                 ExecutePetscII(petscIICode);
             }
@@ -317,5 +318,6 @@ namespace MarcusMedinaPro.Converter.C64
         /// </summary>
         private static void Stop() => Environment.Exit(0);
     }
+
 #pragma warning restore CC0037 // Remove commented code.
 }
