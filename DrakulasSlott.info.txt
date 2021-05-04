@@ -1,0 +1,6 @@
+﻿Name: Drakulas Slott
+Published: 19xx
+Legal: Public Domain
+Language: Swedish
+Genre: Adventure - Text only
+Source: http://www.gamebase64.com/game.php?id=18629&d=18&h=0
