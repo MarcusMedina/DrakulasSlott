@@ -30,7 +30,7 @@ namespace MarcusMedinaPro.Converter.C64
         /// <summary>
         /// Defines the Datacollection.
         /// </summary>
-        private static Queue Datacollection = new Queue();
+        private static readonly Queue Datacollection = new Queue();
 
         /// <summary>
         /// Defines the PosX.
