@@ -19,7 +19,10 @@ namespace DrakulasSlott
         /// </summary>
         internal static void Main()
         {
-            while (DrakulasSlott.Run() == 1);
+            while (DrakulasSlott.Run() == 1)
+            {
+                // Keep running until reply is 0 = Load another game
+            }
         }
     }
 }
