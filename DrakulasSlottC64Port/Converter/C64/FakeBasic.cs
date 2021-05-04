@@ -211,7 +211,7 @@ namespace MarcusMedinaPro.Converter.C64
                 var petscIICode = ch;
 
                 // hint: https://www.c64-wiki.com/images/a/a2/Zeichensatz-c64-poke2.jpg
-                petscIICode = GetpetscIICode(ch, petscIICode);
+                petscIICode = GetpetscIICode(ch);
                 ExecutePetscII(petscIICode);
             }
             if (Newline)
@@ -257,22 +257,21 @@ namespace MarcusMedinaPro.Converter.C64
             }
         }
 
-        private static char GetpetscIICode(char ch, char petscIICode)
+        private static char GetpetscIICode(char ch) => (int)ch switch
         {
-            if (ch == 376) { petscIICode = (char)159; }
-            else if (ch == 92) { petscIICode = (char)163; }
-            else if (ch == 95) { petscIICode = (char)171; }
-            else if (ch == 96) { petscIICode = (char)151; }
-            else if (ch == '‘') { petscIICode = (char)157; }
-            else if (ch == '') { petscIICode = (char)29; }
-            else if (ch == '') { petscIICode = (char)18; }
-            else if (ch == '’') { petscIICode = (char)146; }
-            else if (ch == '“') { petscIICode = (char)147; }
-            else if (ch == 97) { petscIICode = '♠'; }
-            else if (ch == 20) { petscIICode = '\b'; }
-
-            return petscIICode;
-        }
+            376 => (char)159,
+            92 => (char)163,
+            95 => (char)171,
+            96 => (char)151,
+            '‘' => (char)157,
+            '' => (char)29,
+            '' => (char)18,
+            '’' => (char)146,
+            '“' => (char)147,
+            97 => '♠',
+            20 => '\b',
+            _ => ch
+        };
 
         /// <summary>
         /// The ReadInt.
