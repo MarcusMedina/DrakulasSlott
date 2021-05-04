@@ -35,12 +35,12 @@ namespace MarcusMedinaPro.Converter.C64
         /// <summary>
         /// Defines the PosX.
         /// </summary>
-        private static int PosX = 0;
+        private static int PosX;
 
         /// <summary>
         /// Defines the PosY.
         /// </summary>
-        private static int PosY = 0;
+        private static int PosY;
 
         /// <summary>
         /// Gets a value indicating whether Reverse.
