@@ -1,4 +1,7 @@
-#pragma warning disable IDE0059 // 'Unnecessary assignment of a value' nagging
+#pragma warning disable S125 // Sections of code should not be commented out
+#pragma warning disable CC0021 // Use nameof
+#pragma warning disable S2479 // Whitespace and control characters in string literals should be explicit
+#pragma warning disable S907 // "goto" statement should not be used
 
 namespace DrakulasSlott.Game
 {
@@ -179,7 +182,7 @@ namespace DrakulasSlott.Game
             Print();
             Print();
 
-            // 310 PRINT"SYNLIGA UTGÅNGAR - ";:FORX=1TO6:IFP(L,X)>0THENPRINTO$(X);"* ";
+// 310 PRINT"SYNLIGA UTGÅNGAR - ";:FORX=1TO6:IFP(L,X)>0THENPRINTO$(X);"* ";
             Print("SYNLIGA UTGÅNGAR - ", false);
             for (X = 1; X <= 6; X++)
             {
@@ -933,4 +936,7 @@ namespace DrakulasSlott.Game
     }
 }
 
-#pragma warning restore IDE0059 // 'Unnecessary assignment' of a value
+#pragma warning restore S2479 // Whitespace and control characters in string literals should be explicit
+#pragma warning restore S907 // "goto" statement should not be used
+#pragma warning restore CC0021 // Use nameof
+#pragma warning restore S125 // Sections of code should not be commented out

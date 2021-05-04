@@ -4,6 +4,7 @@
 // This file is subject to the terms and conditions defined in file "license.txt"- MIT,
 // which is part of this project. </copyright>
 // ----------------------------------------------------------------------------------------------
+#pragma warning disable CC0037 // Remove commented code.
 
 namespace MarcusMedinaPro.Converter.C64
 {
@@ -57,10 +58,14 @@ namespace MarcusMedinaPro.Converter.C64
         /// The BorderColor.
         /// </summary>
         /// <param name="color">The color<see cref="C64Colors"/>.</param>
+#pragma warning disable RCS1163 // Unused parameter.
+#pragma warning disable IDE0060 // Remove unused parameter
         public static void BorderColor(C64Colors color)
         {
             // Method intentionally left empty. Will be implemented later
         }
+#pragma warning restore RCS1163 // Unused parameter.
+#pragma warning restore IDE0060 // Remove unused parameter
 
         /// <summary>
         /// The Chr.
@@ -210,7 +215,8 @@ namespace MarcusMedinaPro.Converter.C64
             {
                 var petscIICode = ch;
 
-                // hint: https://www.c64-wiki.com/images/a/a2/Zeichensatz-c64-poke2.jpg
+                
+// hint: https://www.c64-wiki.com/images/a/a2/Zeichensatz-c64-poke2.jpg
                 petscIICode = GetpetscIICode(ch);
                 ExecutePetscII(petscIICode);
             }
@@ -309,4 +315,5 @@ namespace MarcusMedinaPro.Converter.C64
         /// </summary>
         private static void Stop() => Environment.Exit(0);
     }
+#pragma warning restore CC0037 // Remove commented code.
 }
