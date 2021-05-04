@@ -1,7 +1,9 @@
+#pragma warning disable S3626 // Jump statements should not be redundant
 #pragma warning disable S125 // Sections of code should not be commented out
 #pragma warning disable CC0021 // Use nameof
 #pragma warning disable S2479 // Whitespace and control characters in string literals should be explicit
 #pragma warning disable S907 // "goto" statement should not be used
+#pragma warning disable S1854 // Unused assignments should be removed
 
 namespace DrakulasSlott.Game
 {
@@ -940,3 +942,5 @@ namespace DrakulasSlott.Game
 #pragma warning restore S907 // "goto" statement should not be used
 #pragma warning restore CC0021 // Use nameof
 #pragma warning restore S125 // Sections of code should not be commented out
+#pragma warning restore S1854 // Unused assignments should be removed
+#pragma warning restore S3626 // Jump statements should not be redundant

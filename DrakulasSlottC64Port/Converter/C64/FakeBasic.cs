@@ -58,14 +58,16 @@ namespace MarcusMedinaPro.Converter.C64
         /// The BorderColor.
         /// </summary>
         /// <param name="color">The color<see cref="C64Colors"/>.</param>
-#pragma warning disable RCS1163 // Unused parameter.
+#pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable IDE0060 // Remove unused parameter
+#pragma warning disable RCS1163 // Unused parameter.
         public static void BorderColor(C64Colors color)
         {
             // Method intentionally left empty. Will be implemented later
         }
 #pragma warning restore RCS1163 // Unused parameter.
 #pragma warning restore IDE0060 // Remove unused parameter
+#pragma warning restore IDE0079 // Remove unnecessary suppression
 
         /// <summary>
         /// The Chr.
