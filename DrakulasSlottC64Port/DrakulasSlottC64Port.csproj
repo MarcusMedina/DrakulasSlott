@@ -9,4 +9,13 @@
     <PackageReference Include="Colorful.Console" Version="1.2.11" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Source\DrakulasSlott.code.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Source\DrakulasSlott.info.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
