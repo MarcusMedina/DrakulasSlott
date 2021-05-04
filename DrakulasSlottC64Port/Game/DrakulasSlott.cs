@@ -29,24 +29,24 @@ namespace DrakulasSlott.Game
         internal static int Run()
         {
             // Declare variables to default values to avoid confusion
-            int A = 0;
-            int C = 0;
-            int F = 0;
-            int FI = 0;
-            int L = 0;
-            int L2 = 0;
-            int OI = 0;
-            int S = 0;
-            int T1 = 0;
-            int T2 = 0;
-            int TA = 0;
-            int X = 0;
-            int Y = 0;
-            string As = "";
-            string Bs = "";
-            string Os = "";
-            string TGPs = "";
-            string Ws = "";
+            var A = 0;
+            var C = 0;
+            var F = 0;
+            var FI = 0;
+            var L = 0;
+            var L2 = 0;
+            var OI = 0;
+            var S = 0;
+            var T1 = 0;
+            var T2 = 0;
+            var TA = 0;
+            var X = 0;
+            var Y = 0;
+            var As = "";
+            var Bs = "";
+            var Os = "";
+            var TGPs = "";
+            var Ws = "";
             Splash();
             // -------------Data moved to top-------------
             Data("HALLEN", "LÄSRUMMET", "BIBLOTEKET", "VAPEN KAMMAREN");
@@ -77,10 +77,10 @@ namespace DrakulasSlott.Game
             // 20 PRINT"“            DRAKULAS SLOTT"
             Print("“            DRAKULAS SLOTT");
             // 100 DIMD$(18),O$(28),L(22),P(18,6):L=1:L2=L
-            string[] Dsa = new string[19];
-            string[] Osa = new string[29];
-            int[] La = new int[23];
-            int[,] Pa = new int[19, 7];
+            var Dsa = new string[19];
+            var Osa = new string[29];
+            var La = new int[23];
+            var Pa = new int[19, 7];
             L = 1;
             L2 = L;
             // 110 FORX=1TO18:READD$(X):NEXT:DATAHALLEN,LÄSRUMMET,BIBLOTEKET,VAPEN KAMMAREN
