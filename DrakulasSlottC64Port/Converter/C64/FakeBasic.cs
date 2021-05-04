@@ -225,7 +225,6 @@ namespace MarcusMedinaPro.Converter.C64
         {
             switch ((int)petscIICode)
             {
-                case 147: { ClearScreen(); PosX = 0; PosY = 0; break; }
                 case 003: { Stop(); break; }
                 case 005: { FontColor(C64Colors.White); break; }
                 case 013: { PosX = 0; PosY++; break; }
@@ -241,6 +240,7 @@ namespace MarcusMedinaPro.Converter.C64
                 case 144: { FontColor(C64Colors.Black); break; }
                 case 145: { PosY--; break; }
                 case 146: { Reverse = false; break; }
+                case 147: { ClearScreen(); PosX = 0; PosY = 0; break; }
                 case 148: { Insert(); break; }
                 case 149: { FontColor(C64Colors.Brown); break; }
                 case 150: { FontColor(C64Colors.LightRed); break; }
