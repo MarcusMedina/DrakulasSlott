@@ -165,7 +165,7 @@ namespace DrakulasSlott.Game
                 if ((La[X] == L2))
                 {
                     Print(" *" + Osa[X + 6], false);
-                    Y++; 
+                    Y++;
                 }
 
                 // 300 NEXT:IFY=0THENPRINT"INGENTING‘"
@@ -197,7 +197,7 @@ namespace DrakulasSlott.Game
             Print();
             S = 0;
             F = 0;
-            As = Input("VAD SKALL JAG GÖRA "); 
+            As = Input("VAD SKALL JAG GÖRA ");
             Print();
             Bs = "";
 
@@ -484,7 +484,7 @@ namespace DrakulasSlott.Game
             }
 
             // 660 INPUT"I VAD ";A$:GOSUB360
-            As = Input("I VAD "); 
+            As = Input("I VAD ");
             Gosub360();
 
             // 665 IF(A$="HI")AND(L(11)=0)AND(L(8)=L)THEN680
@@ -692,7 +692,7 @@ namespace DrakulasSlott.Game
             }
 
             // 910 INPUT"MED VAD ";A$:GOSUB 360
-            As = Input("MED VAD "); 
+            As = Input("MED VAD ");
             Gosub360();
 
             // 920 IF A$="YX"ANDS=16THEN940
@@ -760,7 +760,7 @@ namespace DrakulasSlott.Game
             }
 
             // 1010 INPUT"I VAD";A$:GOSUB 360
-            As = Input("I VAD"); 
+            As = Input("I VAD");
             Gosub360();
 
             // 1020 TGP$=A$:GOTO250
@@ -795,7 +795,7 @@ namespace DrakulasSlott.Game
 
         // 1060 INPUT"MED VAD ";A$:GOSUB360
         Row1060:
-            As = Input("MED VAD "); 
+            As = Input("MED VAD ");
             Gosub360();
 
             // 1070 IF A$="TR"OR A$="PÅ"AND L(10)=0AND O$(16)="TRÄPÅLAR" THEN 1090
@@ -932,4 +932,5 @@ namespace DrakulasSlott.Game
         }
     }
 }
+
 #pragma warning restore IDE0059 // 'Unnecessary assignment' of a value

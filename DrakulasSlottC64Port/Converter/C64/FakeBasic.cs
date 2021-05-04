@@ -1,7 +1,7 @@
 ﻿//----------------------------------------------------------------------------------------------
 // <copyright file="FakeBasic.cs" company="MarcusMedinaPro">
-// By Marcus Medina, 2021 - http://MarcusMedina.Pro 
-// This file is subject to the terms and conditions defined in file "license.txt"- MIT, 
+// By Marcus Medina, 2021 - http://MarcusMedina.Pro
+// This file is subject to the terms and conditions defined in file "license.txt"- MIT,
 // which is part of this project. </copyright>
 // ----------------------------------------------------------------------------------------------
 
@@ -221,6 +221,32 @@ namespace MarcusMedinaPro.Converter.C64
             }
         }
 
+        /// <summary>
+        /// The ReadInt.
+        /// </summary>
+        /// <returns>The <see cref="int"/>.</returns>
+        public static int ReadInt() => (int)Datacollection.Dequeue();
+
+        /// <summary>
+        /// The ReadString.
+        /// </summary>
+        /// <returns>The <see cref="string"/>.</returns>
+        public static string ReadString() => (string)Datacollection.Dequeue();
+
+        /// <summary>
+        /// The ResetConsole.
+        /// </summary>
+        public static void ResetConsole()
+        {
+            Console.OutputEncoding = System.Text.Encoding.Unicode;
+            Console.Clear();
+        }
+
+        /// <summary>
+        /// The Test.
+        /// </summary>
+        public static void Test() => Print(PetschiiB);
+
         private static void ExecutePetscII(char petscIICode)
         {
             switch ((int)petscIICode)
@@ -272,32 +298,6 @@ namespace MarcusMedinaPro.Converter.C64
             20 => '\b',
             _ => ch
         };
-
-        /// <summary>
-        /// The ReadInt.
-        /// </summary>
-        /// <returns>The <see cref="int"/>.</returns>
-        public static int ReadInt() => (int)Datacollection.Dequeue();
-
-        /// <summary>
-        /// The ReadString.
-        /// </summary>
-        /// <returns>The <see cref="string"/>.</returns>
-        public static string ReadString() => (string)Datacollection.Dequeue();
-
-        /// <summary>
-        /// The ResetConsole.
-        /// </summary>
-        public static void ResetConsole()
-        {
-            Console.OutputEncoding = System.Text.Encoding.Unicode;
-            Console.Clear();
-        }
-
-        /// <summary>
-        /// The Test.
-        /// </summary>
-        public static void Test() => Print(PetschiiB);
 
         /// <summary>
         /// The Insert.
