@@ -165,7 +165,7 @@ namespace DrakulasSlott.Game
                 if ((La[X] == L2))
                 {
                     Print(" *" + Osa[X + 6], false);
-                    Y++; ;
+                    Y++; 
                 }
 
                 // 300 NEXT:IFY=0THENPRINT"INGENTING‘"
@@ -197,7 +197,7 @@ namespace DrakulasSlott.Game
             Print();
             S = 0;
             F = 0;
-            As = Input("VAD SKALL JAG GÖRA "); //TODO: Chech that all parameters are there
+            As = Input("VAD SKALL JAG GÖRA "); 
             Print();
             Bs = "";
 
@@ -232,13 +232,13 @@ namespace DrakulasSlott.Game
             L2 = L;
 
             // 385 T1=T1+1
-            T1++; ;
+            T1++;
 
             // 386 IFT1=60THENT1=0:T2=T2+1
             if (T1 == 60)
             {
                 T1 = 0;
-                T2++; ;
+                T2++;
             }
 
             // 400 IFB$="DÖ"THENB$="RO"
@@ -344,7 +344,7 @@ namespace DrakulasSlott.Game
                 {
                     Print(Osa[X + 6]);
                 }
-                A++; ;
+                A++;
 
                 // 490 NEXT:IFA>0THEN330
             }
@@ -484,7 +484,7 @@ namespace DrakulasSlott.Game
             }
 
             // 660 INPUT"I VAD ";A$:GOSUB360
-            As = Input("I VAD "); //TODO: Chech that all parameters are there
+            As = Input("I VAD "); 
             Gosub360();
 
             // 665 IF(A$="HI")AND(L(11)=0)AND(L(8)=L)THEN680
@@ -501,7 +501,7 @@ namespace DrakulasSlott.Game
         // 680 L(8)=0:C=C+1:GOTO250
         Row680:
             La[8] = 0;
-            C++; ;
+            C++;
             goto Row250;
 
         // 690 IFS<>20THEN720
@@ -585,7 +585,7 @@ namespace DrakulasSlott.Game
 
         // 780 C=C+1:L(S-6)=0:GOTO250
         Row780:
-            C++; ;
+            C++;
             La[S - 6] = 0;
             goto Row250;
 
@@ -662,7 +662,7 @@ namespace DrakulasSlott.Game
                 Osa[24] = "ASKA";
                 FI = 1;
                 La[8] = 99;
-                C--; ;
+                C--;
                 goto Row250;
             }
 
@@ -681,7 +681,7 @@ namespace DrakulasSlott.Game
 
             // 900 L(S-6)=L:C=C-1:GOTO250
             La[S - 6] = L;
-            C--; ;
+            C--;
             goto Row250;
 
         // 905 IF (S<>16ORL(10)<>LORL(5)<>0)AND (S<>28ORL(1)<>0ORL<>8)THEN930
@@ -692,7 +692,7 @@ namespace DrakulasSlott.Game
             }
 
             // 910 INPUT"MED VAD ";A$:GOSUB 360
-            As = Input("MED VAD "); //TODO: Chech that all parameters are there
+            As = Input("MED VAD "); 
             Gosub360();
 
             // 920 IF A$="YX"ANDS=16THEN940
@@ -760,7 +760,7 @@ namespace DrakulasSlott.Game
             }
 
             // 1010 INPUT"I VAD";A$:GOSUB 360
-            As = Input("I VAD"); //TODO: Chech that all parameters are there
+            As = Input("I VAD"); 
             Gosub360();
 
             // 1020 TGP$=A$:GOTO250
@@ -795,7 +795,7 @@ namespace DrakulasSlott.Game
 
         // 1060 INPUT"MED VAD ";A$:GOSUB360
         Row1060:
-            As = Input("MED VAD "); //TODO: Chech that all parameters are there
+            As = Input("MED VAD "); 
             Gosub360();
 
             // 1070 IF A$="TR"OR A$="PÅ"AND L(10)=0AND O$(16)="TRÄPÅLAR" THEN 1090

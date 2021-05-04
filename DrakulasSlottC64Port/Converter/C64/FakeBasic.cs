@@ -59,6 +59,7 @@ namespace MarcusMedinaPro.Converter.C64
         /// <param name="color">The color<see cref="C64Colors"/>.</param>
         public static void BorderColor(C64Colors color)
         {
+            // Method intentionally left empty. Will be implemented later
         }
 
         /// <summary>
@@ -207,167 +208,70 @@ namespace MarcusMedinaPro.Converter.C64
         {
             foreach (var ch in output)
             {
-                var petsciiCode = ch;
+                var petscIICode = ch;
 
                 // hint: https://www.c64-wiki.com/images/a/a2/Zeichensatz-c64-poke2.jpg
-
-                if (ch == 376)
-                {
-                    petsciiCode = (char)159;
-                }
-                else if (ch == 92)
-                {
-                    petsciiCode = (char)163;
-                }
-                else if (ch == 95)
-                {
-                    petsciiCode = (char)171;
-                }
-                else if (ch == 96)
-                {
-                    petsciiCode = (char)151;
-                }
-                else if (ch == '‘')
-                {
-                    petsciiCode = (char)157;
-                }
-                else if (ch == '')
-                {
-                    petsciiCode = (char)29;
-                }
-                else if (ch == '') { petsciiCode = (char)18; }
-                else if (ch == '’') { petsciiCode = (char)146; }
-                else if (ch == '‘') { petsciiCode = (char)145; }
-                else if (ch == '“') { petsciiCode = (char)147; }
-                else if (ch == 97)
-                {
-                    petsciiCode = '♠';
-                }
-                else if (ch == 20)
-                {
-                    petsciiCode = '\b';
-                }
-
-                if (petsciiCode == 147)
-                {
-                    ClearScreen();
-                    PosX = 0;
-                    PosY = 0;
-                }
-                else if (petsciiCode == 3)
-                {
-                    Stop();
-                }
-                else if (petsciiCode == 5)
-                {
-                    FontColor(C64Colors.White);
-                }
-                else if (petsciiCode == 17)
-                {
-                    PosY++;
-                }
-                else if (petsciiCode == 18)
-                {
-                    Reverse = true;
-                }
-                else if (petsciiCode == 19) { PosX = 0; PosY = 0; }
-                else if (petsciiCode == 28)
-                {
-                    FontColor(C64Colors.Red);
-                }
-                else if (petsciiCode == 29)
-                {
-                    PosX++;
-                }
-                else if (petsciiCode == 30)
-                {
-                    FontColor(C64Colors.Green);
-                }
-                else if (petsciiCode == 31)
-                {
-                    FontColor(C64Colors.Blue);
-                }
-                else if (petsciiCode == 129)
-                {
-                    FontColor(C64Colors.Orange);
-                }
-                else if (petsciiCode == 141) { PosY++; PosX = 0; } // Shift return
-                else if (petsciiCode == 144)
-                {
-                    FontColor(C64Colors.Black);
-                }
-                else if (petsciiCode == 145)
-                {
-                    PosY--;
-                }
-                else if (petsciiCode == 146)
-                {
-                    Reverse = false;
-                }
-                else if (petsciiCode == 147)
-                {
-                    ClearScreen();
-                }
-                else if (petsciiCode == 148)
-                {
-                    Insert();
-                }
-                else if (petsciiCode == 149)
-                {
-                    FontColor(C64Colors.Brown);
-                }
-                else if (petsciiCode == 150)
-                {
-                    FontColor(C64Colors.LightRed); //pink
-                }
-                else if (petsciiCode == 151)
-                {
-                    FontColor(C64Colors.DarkGrey);
-                }
-                else if (petsciiCode == 152)
-                {
-                    FontColor(C64Colors.Grey2);
-                }
-                else if (petsciiCode == 153)
-                {
-                    FontColor(C64Colors.LightGreen);
-                }
-                else if (petsciiCode == 154)
-                {
-                    FontColor(C64Colors.LightBlue);
-                }
-                else if (petsciiCode == 155)
-                {
-                    FontColor(C64Colors.LightGrey);
-                }
-                else if (petsciiCode == 156)
-                {
-                    FontColor(C64Colors.Red); //purple
-                }
-                else if (petsciiCode == 157)
-                {
-                    PosX++;
-                }
-                else if (petsciiCode == 158)
-                {
-                    FontColor(C64Colors.Yellow);
-                }
-                else if (petsciiCode == 159)
-                {
-                    FontColor(C64Colors.Cyan);
-                }
-                else if (petsciiCode == 13) { PosX = 0; PosY++; }
-                else
-                {
-                    Console.SetCursorPosition(PosX++, PosY);
-                    System.Console.Write(petsciiCode);
-                }
+                petscIICode = GetpetscIICode(ch, petscIICode);
+                ExecutePetscII(petscIICode);
             }
             if (Newline)
             {
                 PosY++;
                 PosX = 0;
             }
+        }
+
+        private static void ExecutePetscII(char petscIICode)
+        {
+            switch ((int)petscIICode)
+            {
+                case 147: { ClearScreen(); PosX = 0; PosY = 0; break; }
+                case 003: { Stop(); break; }
+                case 005: { FontColor(C64Colors.White); break; }
+                case 013: { PosX = 0; PosY++; break; }
+                case 017: { PosY++; break; }
+                case 018: { Reverse = true; break; }
+                case 019: { PosX = 0; PosY = 0; break; }
+                case 028: { FontColor(C64Colors.Red); break; }
+                case 029: { PosX++; break; }
+                case 030: { FontColor(C64Colors.Green); break; }
+                case 031: { FontColor(C64Colors.Blue); break; }
+                case 129: { FontColor(C64Colors.Orange); break; }
+                case 141: { PosY++; PosX = 0; break; }
+                case 144: { FontColor(C64Colors.Black); break; }
+                case 145: { PosY--; break; }
+                case 146: { Reverse = false; break; }
+                case 148: { Insert(); break; }
+                case 149: { FontColor(C64Colors.Brown); break; }
+                case 150: { FontColor(C64Colors.LightRed); break; }
+                case 151: { FontColor(C64Colors.DarkGrey); break; }
+                case 152: { FontColor(C64Colors.Grey2); break; }
+                case 153: { FontColor(C64Colors.LightGreen); break; }
+                case 154: { FontColor(C64Colors.LightBlue); break; }
+                case 155: { FontColor(C64Colors.LightGrey); break; }
+                case 156: { FontColor(C64Colors.Red); break; }
+                case 157: { PosX++; break; }
+                case 158: { FontColor(C64Colors.Yellow); break; }
+                case 159: { FontColor(C64Colors.Cyan); break; }
+                default: { Console.SetCursorPosition(PosX++, PosY); System.Console.Write(petscIICode); break; }
+            }
+        }
+
+        private static char GetpetscIICode(char ch, char petscIICode)
+        {
+            if (ch == 376) { petscIICode = (char)159; }
+            else if (ch == 92) { petscIICode = (char)163; }
+            else if (ch == 95) { petscIICode = (char)171; }
+            else if (ch == 96) { petscIICode = (char)151; }
+            else if (ch == '‘') { petscIICode = (char)157; }
+            else if (ch == '') { petscIICode = (char)29; }
+            else if (ch == '') { petscIICode = (char)18; }
+            else if (ch == '’') { petscIICode = (char)146; }
+            else if (ch == '“') { petscIICode = (char)147; }
+            else if (ch == 97) { petscIICode = '♠'; }
+            else if (ch == 20) { petscIICode = '\b'; }
+
+            return petscIICode;
         }
 
         /// <summary>
