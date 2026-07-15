@@ -521,12 +521,16 @@ public class DrakulasSlottGame
     }
 
     // ── Substantivsökning ────────────────────────────────────────────────────
+    // BASIC's FOR-NEXT loop overwrites S on every match, so the LAST match wins.
+    // This matters for "EL" which matches both ELD I ELDSTADEN (S=24) and
+    // ELDSTAD AV TEGEL (S=28) — the correct result is S=28 (last match).
     private int FindNoun(string b)
     {
         if (b.Length < 2) return 0;
+        int lastMatch = 0;
         for (int x = 0; x < _os.Length - 1; x += 2)
-            if (_os.Substring(x, 2) == b) return x / 2 + 1;
-        return 0;
+            if (_os.Substring(x, 2) == b) lastMatch = x / 2 + 1;
+        return lastMatch;
     }
 
     // ── Hjälpmetod: läs 2-teckens svar ──────────────────────────────────────
