@@ -1,0 +1,339 @@
+<title>Drakulas Slott — En vampyrjägares berättelse</title>
+<style>
+  :root {
+    --bg:           #080610;
+    --surface:      #100d18;
+    --text:         #d4bfa0;
+    --text-dim:     #6e5e48;
+    --text-warm:    #c4a87a;
+    --gold:         #b8892a;
+    --accent:       #7a1818;
+    --rule:         #26201a;
+    --cmd-bg:       rgba(255,255,255,0.05);
+    --cmd-text:     #8a7865;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.0625rem;
+    line-height: 1.8;
+    min-height: 100vh;
+  }
+
+  /* Subtle vignette */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, transparent 40%, rgba(0,0,0,0.5) 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .journal {
+    position: relative;
+    z-index: 1;
+    max-width: 660px;
+    margin: 0 auto;
+    padding: 4rem 2rem 7rem;
+  }
+
+  /* ── Title ─────────────────────────────────────── */
+  .title-page {
+    text-align: center;
+    padding-bottom: 3rem;
+    margin-bottom: 3.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .eyebrow {
+    font-size: 0.7rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 1.8rem;
+  }
+
+  h1 {
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+    font-size: clamp(2.1rem, 6vw, 3.4rem);
+    font-weight: normal;
+    color: var(--gold);
+    letter-spacing: 0.06em;
+    text-wrap: balance;
+    margin-bottom: 1rem;
+  }
+
+  .subtitle {
+    font-style: italic;
+    color: var(--text-dim);
+    font-size: 0.95rem;
+  }
+
+  .ornament {
+    display: block;
+    color: var(--accent);
+    margin: 1.8rem auto;
+    font-size: 1.1rem;
+    letter-spacing: 0.5em;
+    opacity: 0.7;
+  }
+
+  /* ── Chapters ──────────────────────────────────── */
+  .chapter {
+    margin-top: 3.2rem;
+  }
+
+  .chapter-label {
+    display: block;
+    font-size: 0.65rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 0.4rem;
+  }
+
+  h2 {
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+    font-size: 1.25rem;
+    font-weight: normal;
+    color: var(--gold);
+    padding-bottom: 0.7rem;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 1.4rem;
+    text-wrap: balance;
+  }
+
+  /* ── Prose ─────────────────────────────────────── */
+  p {
+    margin-bottom: 1rem;
+  }
+
+  /* Drop cap on the very first paragraph */
+  .chapter:first-of-type p:first-of-type::first-letter {
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+    float: left;
+    font-size: 3.9rem;
+    line-height: 0.78;
+    padding-right: 0.12em;
+    padding-top: 0.06em;
+    color: var(--accent);
+  }
+
+  em {
+    color: var(--text-warm);
+    font-style: italic;
+  }
+
+  /* Inner voice — the all-caps game confirmations */
+  .voice {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 0.82em;
+    color: var(--cmd-text);
+    letter-spacing: 0.04em;
+    display: inline-block;
+  }
+
+  /* Game command shown inline */
+  code {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 0.82em;
+    background: var(--cmd-bg);
+    color: var(--cmd-text);
+    padding: 0.1em 0.45em;
+    border-radius: 2px;
+  }
+
+  /* ── Dividers ──────────────────────────────────── */
+  .divider {
+    text-align: center;
+    color: var(--accent);
+    margin: 2.8rem 0;
+    opacity: 0.5;
+    letter-spacing: 0.6em;
+    font-size: 0.75rem;
+  }
+
+  /* ── Epilogue ──────────────────────────────────── */
+  .epilogue {
+    margin-top: 4rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--rule);
+    text-align: center;
+    font-style: italic;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+
+  .epilogue strong {
+    display: block;
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+    font-style: normal;
+    font-size: 1rem;
+    color: var(--gold);
+    margin-top: 1rem;
+    letter-spacing: 0.1em;
+  }
+
+  @media (max-width: 480px) {
+    .journal { padding: 2.5rem 1.25rem 5rem; }
+    .chapter:first-of-type p:first-of-type::first-letter {
+      font-size: 3rem;
+    }
+  }
+</style>
+
+<div class="journal">
+
+  <div class="title-page">
+    <p class="eyebrow">En vampyrjägares berättelse</p>
+    <h1>Drakulas Slott</h1>
+    <p class="subtitle">Nedtecknat i efterhand, när händerna slutat darra</p>
+    <span class="ornament">✦ ✦ ✦</span>
+  </div>
+
+  <section class="chapter">
+    <span class="chapter-label">I</span>
+    <h2>Hallen</h2>
+
+    <p>Vampyrjägaren vandrade in i slottet. Natten var mörk — naturligtvis var den det, det <em>är</em> ett vampyrslott — och lukten av fukt och gamla hemligheter hängde tungt i luften.</p>
+
+    <p>I hallen hittade han en klocka och en skylt. Vad märkligt. Han läste skylten med en facklas flämtande sken: <em>"Vampyren vaknar vid midnatt."</em> Han tittade på klockan. Tjugo i åtta. Han hade tid.</p>
+
+    <p>Han lämnade klockan hängandes där den hängde. Den var säkert viktig, kände han, men just nu hade han viktigare saker för sig.</p>
+  </section>
+
+  <section class="chapter">
+    <span class="chapter-label">II</span>
+    <h2>Bibloteket</h2>
+
+    <p>Österut låg biblioteket. Han lade märke till stavningen på skylten vid ingången — <em>BIBLOTEKET</em> — och beslutade att inte kommentera det. Det var vampyrens slott, inte hans. Kanske vampyren var dålig på svenska.</p>
+
+    <p>Bokhyllan fångade hans öga. Något med den kändes fel. Han tryckte till, och med ett dystert gnisslande skjöt hela hyllan åt sidan och avslöjade en trappa ner i mörkret.</p>
+
+    <p><span class="voice">AHA!</span>, tänkte han. Naturligtvis.</p>
+  </section>
+
+  <section class="chapter">
+    <span class="chapter-label">III</span>
+    <h2>Den gömda korridoren</h2>
+
+    <p>I korridoren under biblioteket låg ett rep upprullat mot väggen. Han tog det. Man vet aldrig när ett rep kommer till nytta i ett vampyrslott. Det är nästan en grundregel.</p>
+  </section>
+
+  <section class="chapter">
+    <span class="chapter-label">IV</span>
+    <h2>Alkemistens laboratorium</h2>
+
+    <p>Norr om korridoren låg en alkemists labb, full av märkliga buteljer och illaluktande konkoktioner. En av dem var märkt <em>OLJE FLASKA</em>. Han stoppade den i fickan utan att tänka alltför mycket på vad den tidigare innehållit.</p>
+  </section>
+
+  <section class="chapter">
+    <span class="chapter-label">V</span>
+    <h2>Förvaringsrummet</h2>
+
+    <p>Ännu längre norrut hittade han ett förvaringsrum. Där stod en hink och en låda.</p>
+
+    <p>Han tittade på hinken. Sen på lådan. Sen på hinken igen.</p>
+
+    <p>Han tog hinken. Lådan fick vänta.</p>
+  </section>
+
+  <div class="divider">— ✦ —</div>
+
+  <section class="chapter">
+    <span class="chapter-label">VI</span>
+    <h2>Yxan och träpålarna</h2>
+
+    <p>Via en genväg uppåt — försörjningstrappan, tydligen — navigerade han österut till vapenrummet. Där hängde en yxa på väggen, exakt som det ska vara i ett vapenrum. Han tog den.</p>
+
+    <p>Tillbaka i förvaringsrummet höll han upp yxan och tittade på lådan.</p>
+
+    <p><span class="voice">DU SLOG SÖNDER LÅDAN TILL NÅGRA TRÄPÅLAR</span>, konstaterade en röst i hans huvud — den där inre rösten som alltid talar i versaler när man gör något dramatiskt.</p>
+
+    <p>Träpålar. Naturligtvis. Det var <em>det</em> lådan var till för. Han lämnade yxan på golvet. Den hade gjort sitt.</p>
+  </section>
+
+  <section class="chapter">
+    <span class="chapter-label">VII</span>
+    <h2>Tornet och balkongen</h2>
+
+    <p>Tornet var kallt och dragigt, som torn brukar vara. Släggan låg på golvet, tung och tillfredsställande. Han tog den.</p>
+
+    <p>Sedan knöt han repet runt balkongen, testade knutarna en gång, suckade djupt, och klättrade ner längs fasaden till lägre tornet. Nere i kapellet hittade han en nyckel och, ännu viktigare, ett kärl märkt <em>HELIGT VATTEN</em>.</p>
+
+    <p>Han tittade på hinken i handen. Han hällde det heliga vattnet i hinken. Sedan lämnade han hinken. Den hade gjort sitt jobb.</p>
+  </section>
+
+  <section class="chapter">
+    <span class="chapter-label">VIII</span>
+    <h2>Det brinner</h2>
+
+    <p>Tillbaka i läsrummet satte han försiktigt ner det heliga vattnet — och det fattade eld. Spontant.</p>
+
+    <p>Han stod och tittade på lågorna en stund. <em>Det borde ha förvånat mig mer</em>, tänkte han. Men det gjorde det inte. Det var ett vampyrslott.</p>
+
+    <p>Elden hade smält ett hål i muren mot eldstaden av tegel. Han tog en fackla, höjde sedan släggan och slog sönder väggen norrut.</p>
+
+    <p>Bakom den: en hemlig passage. Naturligtvis.</p>
+  </section>
+
+  <div class="divider">— ✦ —</div>
+
+  <section class="chapter">
+    <span class="chapter-label">IX</span>
+    <h2>Underjorden</h2>
+
+    <p>Med facklan lyftad mot mörkret tog han sig norrut genom passagen och ner mot en underjordisk sjö — tyst, svart, iskall. En båt låg förankrad vid stranden.</p>
+
+    <p>Han klev ombord, tog i åran, och rodde.</p>
+
+    <p><span class="voice">DU HAR ROTT MED BÅTEN TILL ANDRA SIDAN.</span></p>
+  </section>
+
+  <section class="chapter">
+    <span class="chapter-label">X</span>
+    <h2>Gobelängen och spikarnas mysterium</h2>
+
+    <p>Galleriet var en stor sal med en gobeläng fastsatt högt uppe i taket. Han funderade. Sedan gick han ut på takskägget — en smal avsats längs utsidan av byggnaden, precis så bred att man <em>kunde</em> gå på den men absolut inte <em>borde</em> — och hittade en påse spikar.</p>
+
+    <p>Han lämnade åran där ute. Den hade gjort sitt.</p>
+
+    <p>Sen tog han spikarna. Gobeläng rasade ner i galleriet med ett dånande brak.</p>
+
+    <p>Han klättrade upp igen, lade ifrån sig spikarna, tog gobeläng. En norrutgång dök upp ur ingenstans.</p>
+
+    <p><span class="voice">AHA!</span></p>
+  </section>
+
+  <section class="chapter">
+    <span class="chapter-label">XI</span>
+    <h2>Wampyrernas grav</h2>
+
+    <p>Sido rummet. En rostig dörr. Oljeflaskan kom till nytta — precis som han misstänkt, om än inte riktigt under de omständigheter han föreställt sig.</p>
+
+    <p>Bakom dörren: Wampyrernas grav. Stavat med W, vilket vampyren uppenbarligen tyckte var mer dramatiskt.</p>
+
+    <p>En stängd kista stod i mitten av rummet.</p>
+
+    <p>Han använde nyckeln.</p>
+
+    <p><span class="voice">VAMPYR I KISTA.</span></p>
+
+    <p>Han höll upp en träpåle.</p>
+
+    <p><span class="voice">GRATULERAR ! — DU HAR DÖDAT VAMPYREN.</span></p>
+  </section>
+
+  <div class="epilogue">
+    <p>Vampyrjägaren torkade av händerna, tittade på det som legat i kistan, och tänkte att han egentligen borde känt mer av ett triumferande ögonblick. Men det var sent, slottet luktade och han hade spenderat hela kvällen med att bära runt på rep, spikar och heligt vatten i en hink.</p>
+    <p>Det fick räcka.</p>
+    <strong>✦</strong>
+  </div>
+
+</div>
