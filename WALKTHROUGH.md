@@ -82,9 +82,8 @@ GÅ ÖST               → HALLEN
 GÅ ÖST               → BIBLOTEKET
 GÅ ÖST               → VAPEN KAMMAREN
 TA YXA
-GÅ NER               → DEN GÖMDA KORRIDOREN   [via bokhyllegången]
-
-(Alternativ väg: GÅ VÄST → BIBLOTEKET → GÅ NER)
+GÅ VÄST              → BIBLOTEKET             (bokhyllegången är härifrån, inte från VAPEN KAMMAREN)
+GÅ NER               → DEN GÖMDA KORRIDOREN
 
 GÅ NORR              → ALKEMISTENS LABRATORIUM
 GÅ NORR              → FÖRVARINGS RUMMET
@@ -142,6 +141,7 @@ RO                   → GALLERIET               (du har rott till andra sidan!)
 
 ```
 GÅ TAKSKÄGG          → TAKSKÄGGET              (speciell rörelse nedåt)
+LÄGGA ÅROR           → (åran är redan använd, gör plats i ryggsäcken)
 TA SPIKAR            → GOBELÄNGEN FÖLL!        (behöver SLÄGGA)
 GÅ UPP               → GALLERIET
 LÄGGA SPIKAR         → (behövs inte mer)
