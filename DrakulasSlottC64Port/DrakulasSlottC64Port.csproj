@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Colorful.Console" Version="1.2.11" />
+    <PackageReference Include="Spectre.Console.ImageSharp" Version="0.57.2" />
   </ItemGroup>
 
   <ItemGroup>
