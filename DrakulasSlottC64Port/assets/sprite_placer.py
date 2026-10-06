@@ -42,6 +42,23 @@ ROOMS_DIR     = os.path.join(BASE_DIR, "rooms")
 SPRITES_DIR   = os.path.join(BASE_DIR, "sprites")
 POSITIONS     = os.path.join(BASE_DIR, "sprite_positions.json")
 PREVIEW_DIR   = os.path.join(BASE_DIR, "preview")
+SPRITE_CFG    = os.path.join(BASE_DIR, "sprite_config.json")
+
+
+def load_sprite_config() -> dict:
+    try:
+        with open(SPRITE_CFG) as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+
+def load_positions() -> dict:
+    try:
+        with open(POSITIONS) as f:
+            return json.load(f)
+    except Exception:
+        return {}
 
 WIN_W, WIN_H  = 1280, 820
 PANEL_H       = 30       # statusrad längst ned
@@ -90,10 +107,23 @@ def pil_to_surf(img: Image.Image, w: int, h: int) -> "pygame.Surface":
 
 def selection_screen(screen: "pygame.Surface", font: "pygame.Font",
                      rooms: list[str], sprites: list[str],
-                     ri: int, si: int, focus: int) -> tuple[int, int, int, bool]:
-    """Ritar urvalspanelen. Returnerar (ri, si, focus, confirmed)."""
-    W, H = screen.get_size()
+                     ri: int, si: int, focus: int,
+                     sprite_cfg: dict | None = None,
+                     saved_pos: dict | None = None) -> None:
+    """Ritar urvalspanelen med typ-indikatorer och ✓ för sparade positioner."""
+    W, H  = screen.get_size()
     col_w = W // 2
+    cfg   = sprite_cfg or {}
+    pos   = saved_pos  or {}
+
+    # Aktuellt rum (för att kolla sparade positioner)
+    cur_room = os.path.splitext(rooms[ri])[0] if rooms else ""
+
+    # Färger per sprite-typ
+    TYPE_COLOR = {
+        "item":  (255, 200,  60),   # varm gul  — plockvara
+        "state": (140, 160, 255),   # blålila   — händelsestyrd
+    }
 
     screen.fill((20, 20, 30))
 
@@ -101,7 +131,7 @@ def selection_screen(screen: "pygame.Surface", font: "pygame.Font",
         (0, rooms,   ri, "RUM"),
         (1, sprites, si, "SPRITES"),
     ]:
-        x0 = col * col_w
+        x0     = col * col_w
         active = (focus == col)
         hdr_color = (200, 160, 80) if active else (120, 100, 60)
         pygame.draw.rect(screen, (30, 30, 45), (x0, 0, col_w, H))
@@ -111,22 +141,48 @@ def selection_screen(screen: "pygame.Surface", font: "pygame.Font",
         hdr = font.render(f"── {label} ──  (Tab för att byta)", True, hdr_color)
         screen.blit(hdr, (x0 + 12, 10))
 
-        row_h    = 22
-        visible  = (H - 50) // row_h
-        start    = max(0, idx - visible // 2)
+        row_h   = 22
+        visible = (H - 50) // row_h
+        start   = max(0, idx - visible // 2)
+
         for i, name in enumerate(items[start:start + visible]):
-            gi    = start + i
-            y     = 40 + i * row_h
-            color = (255, 220, 80) if gi == idx else (180, 180, 180)
-            bg    = (50, 50, 80)   if gi == idx else (30, 30, 45)
+            gi = start + i
+            y  = 40 + i * row_h
+            bg = (50, 50, 80) if gi == idx else (30, 30, 45)
             pygame.draw.rect(screen, bg, (x0 + 2, y - 1, col_w - 4, row_h - 2))
-            txt = font.render(f"  {name}", True, color)
+
+            if col == 1:  # sprite-kolumn
+                info       = cfg.get(name, {})
+                stype      = info.get("type", "")
+                base_color = TYPE_COLOR.get(stype, (180, 180, 180))
+                color      = (255, 255, 120) if gi == idx else base_color
+
+                # ✓ om sparad position finns för aktuellt rum + denna sprite
+                skey    = f"{cur_room}__{os.path.splitext(name)[0]}"
+                checked = "✓ " if skey in pos else "  "
+
+                # Typ-tagg
+                tag = f"[{stype}]" if stype else ""
+                txt = font.render(f"{checked}{name}  {tag}", True, color)
+            else:
+                color = (255, 220, 80) if gi == idx else (180, 180, 180)
+                txt   = font.render(f"  {name}", True, color)
+
             screen.blit(txt, (x0 + 4, y + 1))
 
-    hint = font.render("Enter = öppna placeraren   Q = avsluta", True, (140, 140, 140))
-    screen.blit(hint, (W // 2 - hint.get_width() // 2, H - 22))
+    # Förklaring längst ned
+    legend_y = H - 42
+    pygame.draw.rect(screen, (20, 20, 30), (0, legend_y - 4, W, 46))
+    leg_item  = font.render("■ item = plockvara (gul)", True, TYPE_COLOR["item"])
+    leg_state = font.render("■ state = händelsestyrd (blå)", True, TYPE_COLOR["state"])
+    leg_check = font.render("✓ = sparad position för valt rum", True, (160, 220, 160))
+    hint      = font.render("Enter = öppna placeraren   Tab = byt kolumn   Q = avsluta",
+                             True, (140, 140, 140))
+    screen.blit(leg_item,  (12,        legend_y))
+    screen.blit(leg_state, (260,       legend_y))
+    screen.blit(leg_check, (560,       legend_y))
+    screen.blit(hint,      (W // 2 - hint.get_width() // 2, legend_y + 18))
     pygame.display.flip()
-    return ri, si, focus, False
 
 
 # ── Placeringsläge ────────────────────────────────────────────────────────────
@@ -230,15 +286,18 @@ class Placer:
         self._load_sprite()
         self._center()
 
-    def render(self, screen: "pygame.Surface", font: "pygame.Font"):
+    def render(self, screen: "pygame.Surface", font: "pygame.Font",
+               sprite_cfg: dict | None = None):
         comp = composite(self.room_img, self.sprite_img, self.sx, self.sy)
         surf = pil_to_surf(comp, self.disp_w, self.disp_h)
         screen.fill((0, 0, 0))
         screen.blit(surf, (0, 0))
 
-        pct_x = (self.sx + self.sw // 2) / self.rw * 100
-        pct_y = (self.sy + self.sh // 2) / self.rh * 100
-        status = (f"  {self.rooms[self.ri]}  +  {self.sprites[self.si]}"
+        pct_x  = (self.sx + self.sw // 2) / self.rw * 100
+        pct_y  = (self.sy + self.sh // 2) / self.rh * 100
+        sname  = self.sprites[self.si]
+        stype  = (sprite_cfg or {}).get(sname, {}).get("type", "?")
+        status = (f"  [{stype}] {self.rooms[self.ri]}  +  {sname}"
                   f"   px({self.sx},{self.sy})  {pct_x:.1f}%,{pct_y:.1f}%"
                   f"   skala {self.scale*100:.0f}%"
                   f"   +/- storlek   ↑↓←→ 1px  Shift=10px   dra med mus   R/P byt   S spara   Esc tillbaka")
@@ -293,18 +352,23 @@ def main():
     si = sprites.index(args.sprite) if args.sprite in sprites else 0
 
     pygame.init()
-    screen = pygame.display.set_mode((WIN_W, WIN_H))
+    screen     = pygame.display.set_mode((WIN_W, WIN_H))
     pygame.display.set_caption("Sprite Placer — Drakulas Slott")
-    font   = pygame.font.SysFont("monospace", 13)
-    clock  = pygame.time.Clock()
+    font       = pygame.font.SysFont("monospace", 13)
+    clock      = pygame.time.Clock()
+    sprite_cfg = load_sprite_config()
 
     MODE_SELECT  = "select"
     MODE_PLACE   = "place"
     mode         = MODE_SELECT
-    focus        = 0   # 0 = rum-kolumn, 1 = sprite-kolumn
+    focus        = 0
     placer: Placer | None = None
 
-    selection_screen(screen, font, rooms, sprites, ri, si, focus)
+    def draw_select():
+        selection_screen(screen, font, rooms, sprites, ri, si, focus,
+                         sprite_cfg, load_positions())
+
+    draw_select()
 
     running = True
     while running:
@@ -329,12 +393,12 @@ def main():
                     elif event.key == pygame.K_RETURN:
                         placer = Placer(rooms, sprites, ri, si)
                         mode   = MODE_PLACE
-                        placer.render(screen, font)
+                        placer.render(screen, font, sprite_cfg)
                         continue
                     elif event.key in (pygame.K_q, pygame.K_ESCAPE):
                         running = False
                         continue
-                    selection_screen(screen, font, rooms, sprites, ri, si, focus)
+                    draw_select()
 
                 # ── Placering ──
                 elif mode == MODE_PLACE and placer:
@@ -356,24 +420,24 @@ def main():
                     elif event.key == pygame.K_ESCAPE:
                         ri, si = placer.ri, placer.si
                         mode   = MODE_SELECT
-                        selection_screen(screen, font, rooms, sprites, ri, si, focus)
+                        draw_select()
                         continue
                     elif event.key in (pygame.K_q,):
                         running = False; continue
                     else:
                         continue
-                    placer.render(screen, font)
+                    placer.render(screen, font, sprite_cfg)
 
             # ── Mus-drag (bara i placeringsläget) ──
             elif event.type == pygame.MOUSEBUTTONDOWN and mode == MODE_PLACE and placer:
                 if event.button == 1:
                     placer.start_drag(*event.pos)
-                    placer.render(screen, font)
+                    placer.render(screen, font, sprite_cfg)
 
             elif event.type == pygame.MOUSEMOTION and mode == MODE_PLACE and placer:
                 if getattr(placer, "dragging", False):
                     placer.drag_to(*event.pos)
-                    placer.render(screen, font)
+                    placer.render(screen, font, sprite_cfg)
 
             elif event.type == pygame.MOUSEBUTTONUP and mode == MODE_PLACE and placer:
                 if event.button == 1:

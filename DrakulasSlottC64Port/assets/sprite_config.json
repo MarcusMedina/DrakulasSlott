@@ -1,0 +1,23 @@
+{
+  "_comment": "type: item = spelaren kan ta/släppa, state = händelsestyrd sprite",
+  "slagga.png":              { "type": "item",  "label": "Slägga" },
+  "klocka.png":              { "type": "item",  "label": "Klocka" },
+  "rep.png":                 { "type": "item",  "label": "Rep" },
+  "pergament_rulle.png":     { "type": "item",  "label": "Pergamentrulle" },
+  "yxa.png":                 { "type": "item",  "label": "Yxa" },
+  "aror.png":                { "type": "item",  "label": "Åror" },
+  "nyckel.png":              { "type": "item",  "label": "Nyckel" },
+  "heligt_vatten.png":       { "type": "item",  "label": "Heligt vatten" },
+  "olje_flaska.png":         { "type": "item",  "label": "Oljeflaska" },
+  "lada.png":                { "type": "item",  "label": "Låda" },
+  "hink.png":                { "type": "item",  "label": "Hink" },
+  "fackla.png":              { "type": "item",  "label": "Fackla" },
+  "spikar.png":              { "type": "item",  "label": "Spikar" },
+  "eld_kamin.png":           { "type": "state", "label": "Eld i kamin" },
+  "aska.png":                { "type": "state", "label": "Aska" },
+  "eldstad_sonderslagen.png":{ "type": "state", "label": "Sönderslagen eldstad" },
+  "dörr_öppen.png":          { "type": "state", "label": "Öppen dörr" },
+  "vampyr_i_kista.png":      { "type": "state", "label": "Vampyr i kista" },
+  "gobelas_fallen.png":      { "type": "state", "label": "Gobeläng fallen" },
+  "ekan_vid_strand.png":     { "type": "state", "label": "Ekan vid strand" }
+}
