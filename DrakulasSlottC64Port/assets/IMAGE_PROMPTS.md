@@ -368,6 +368,173 @@ or bundled together. Dark grey metal. Isolated object, black background. Retro 8
 
 ---
 
+---
+
+## 🔄 Dynamiska tillstånd (variant-bilder)
+
+Dessa rum ser olika ut beroende på vad spelaren gjort. Namnkonvention: `rooms/NN_namn_STATE.png`.
+Suffix: `_a` = grundtillstånd, `_b` = ändrat tillstånd.
+
+---
+
+### 02_lasrummet_a.png — Eld brinner i eldstaden
+Spara som: `rooms/02_lasrummet_a.png`
+```
+Same as 02_lasrummet.png — large roaring fire in brick fireplace.
+Warm orange glow fills the room. Fire is the dominant light source.
+Clearly impassable — wall of flame.
+Commodore 64 pixel art, 320x200, gothic castle reading room. 16-color limited palette.
+```
+
+### 02_lasrummet_b.png — Elden slocknad (askor, passage öppen)
+Spara som: `rooms/02_lasrummet_b.png`
+```
+Commodore 64 pixel art, 320x200, gothic castle reading room, fireplace extinguished.
+Same room as 02_lasrummet but fireplace now cold and dark. Pile of grey ash where fire was.
+Dark opening in the fireplace visible — a passage through the back of the hearth.
+Cold blue-grey atmosphere, only dim ambient light. Ominous dark opening in fireplace.
+16-color limited palette, hard pixel edges, no anti-aliasing, retro 1980s game art style.
+```
+
+---
+
+### 08_eldstaden_a.png — Eldstaden hel
+Spara som: `rooms/08_eldstaden_av_tegel_a.png`
+```
+Same as 08_eldstaden_av_tegel.png — intact massive brick fireplace structure, imposing stone wall.
+Commodore 64 pixel art, 320x200. 16-color limited palette.
+```
+
+### 08_eldstaden_b.png — Eldstaden sönderslagen (hemlig passage öppen)
+Spara som: `rooms/08_eldstaden_av_tegel_b.png`
+```
+Commodore 64 pixel art, 320x200, gothic castle room, brick fireplace smashed open.
+The large ornate brick fireplace has been destroyed with a sledgehammer — bricks scattered on floor.
+A dark opening in the wall where the fireplace stood, revealing a secret passage beyond.
+Rubble and broken bricks on the stone floor. Dust in the air. Darkness in the opening.
+16-color limited palette, hard pixel edges, no anti-aliasing, retro 1980s game art style.
+```
+
+---
+
+### 11_sjo_a.png — Underjordisk sjö med ekan
+Spara som: `rooms/11_underjordisk_sjo_a.png`
+```
+Same as 11_underjordisk_sjo.png — underground lake with small wooden rowboat moored at the stone shore.
+The boat is present and waiting. Rope tied to iron ring on the rock.
+Commodore 64 pixel art, 320x200. 16-color limited palette.
+```
+
+### 11_sjo_b.png — Underjordisk sjö utan ekan
+Spara som: `rooms/11_underjordisk_sjo_b.png`
+```
+Commodore 64 pixel art, 320x200, gothic underground lake cavern, no boat present.
+Same vast underground lake as 11_underjordisk_sjo but the stone shore is empty.
+Empty iron ring where boat was tied. Ripples on the water. Boat visible far away in the darkness.
+Eerie, vast, silent. Stalactites overhead. Blue phosphorescent water glow.
+16-color limited palette, hard pixel edges, no anti-aliasing, retro 1980s game art style.
+```
+
+---
+
+### 12_bat_a.png — Ekan utan åror
+Spara som: `rooms/12_en_bat_a.png`
+```
+Commodore 64 pixel art, 320x200, inside a small wooden rowboat on dark underground lake.
+The oarlocks are empty — no oars in the boat. Boat drifts motionless.
+Dark water surrounds, cave walls visible on sides. No way to move forward.
+Stranded feeling. Cold dark water, dim blue cavern light.
+16-color limited palette, hard pixel edges, no anti-aliasing, retro 1980s game art style.
+```
+
+### 12_bat_b.png — Ekan med åror (redo att ro)
+Spara som: `rooms/12_en_bat_b.png`
+```
+Commodore 64 pixel art, 320x200, inside a small wooden rowboat on dark underground lake.
+A pair of wooden oars rest in the oarlocks, ready to use. Boat faces across the dark water.
+Cave walls on both sides, faint glow ahead in the darkness indicating the far shore.
+Ready to row. Purposeful, forward-looking.
+16-color limited palette, hard pixel edges, no anti-aliasing, retro 1980s game art style.
+```
+
+---
+
+### 14_forvarings_a.png — Låda hel
+Spara som: `rooms/14_forvarings_rummet_a.png`
+```
+Same as 14_forvarings_rummet.png — intact wooden crate/box prominently in foreground.
+Commodore 64 pixel art, 320x200. 16-color limited palette.
+```
+
+### 14_forvarings_b.png — Lådan sönderslagen (träpålar)
+Spara som: `rooms/14_forvarings_rummet_b.png`
+```
+Commodore 64 pixel art, 320x200, gothic castle storage room, wooden crate smashed open.
+Where the intact box was, now a pile of sharp wooden stakes/planks scattered on the floor.
+Splintered wood, jagged pointed stakes clearly visible. The rest of the room unchanged.
+16-color limited palette, hard pixel edges, no anti-aliasing, retro 1980s game art style.
+```
+
+---
+
+### 16_galleriet_a.png — Gobeläng hängande
+Spara som: `rooms/16_galleriet_a.png`
+```
+Same as 16_galleriet.png — large tapestry hanging from the ceiling, nailed up high.
+Imposing, decorative, clearly suspended from above.
+Commodore 64 pixel art, 320x200. 16-color limited palette.
+```
+
+### 16_galleriet_b.png — Gobeläng fallen
+Spara som: `rooms/16_galleriet_b.png`
+```
+Commodore 64 pixel art, 320x200, gothic castle gallery, tapestry fallen to the floor.
+The large tapestry/gobelin has crashed to the stone floor — crumpled heap of heavy woven fabric.
+Iron nails scattered on the floor nearby. Empty hooks on the ceiling where it hung.
+The rest of the gallery unchanged. Dust in the air from the fall.
+16-color limited palette, hard pixel edges, no anti-aliasing, retro 1980s game art style.
+```
+
+---
+
+### 17_sido_a.png — Rostig dörr stängd
+Spara som: `rooms/17_sido_rummet_a.png`
+```
+Same as 17_sido_rummet.png — heavy rusted iron door, clearly locked and impassable.
+Commodore 64 pixel art, 320x200. 16-color limited palette.
+```
+
+### 17_sido_b.png — Dörren öppen
+Spara som: `rooms/17_sido_rummet_b.png`
+```
+Commodore 64 pixel art, 320x200, gothic castle side room, iron door now open.
+The heavy iron door stands ajar, swung open on its creaking hinges.
+Beyond the doorway: darkness, stairs descending, ominous unknown.
+The door is old but oiled — hinges no longer rusty. Key in the lock or on the floor nearby.
+16-color limited palette, hard pixel edges, no anti-aliasing, retro 1980s game art style.
+```
+
+---
+
+### 18_grav_a.png — Kistan stängd
+Spara som: `rooms/18_wampyrernas_grav_a.png`
+```
+Same as 18_wampyrernas_grav.png — closed ornate wooden coffin with iron clasps, shut.
+Commodore 64 pixel art, 320x200. 16-color limited palette.
+```
+
+### 18_grav_b.png — Kistan öppen, vampyr synlig
+Spara som: `rooms/18_wampyrernas_grav_b.png`
+```
+Commodore 64 pixel art, 320x200, gothic vampire crypt, coffin open revealing vampire inside.
+The large ornate coffin lid is thrown open. Inside: a pale vampire figure in a black cape,
+eyes closed, hands crossed on chest. Extremely pale skin, dark clothing, still as death.
+Ominous, threatening even in sleep. Red-purple atmosphere. Cold candle light.
+16-color limited palette, hard pixel edges, no anti-aliasing, retro 1980s game art style.
+```
+
+---
+
 ## Bildnamn → spelkod
 
 | Fil | Rumsnummer | Spelkonstant |
