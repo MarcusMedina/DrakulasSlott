@@ -32,10 +32,10 @@ STYLE = (
     f"{NO_TEXT}, {NO_CHARS}"
 )
 SPRITE_STYLE = (
-    "Commodore 64 pixel art with hand-drawn fantasy illustration style, "
-    "16-color limited palette, chunky expressive pixels, isolated object centered on solid black background, "
-    "classic adventure game item icon, organic and hand-crafted feel. "
-    "no text, no letters, no words, no captions"
+    f"Commodore 64 pixel art with hand-drawn fantasy illustration style, "
+    f"16-color limited palette, chunky expressive pixels, isolated object centered on solid black background, "
+    f"classic adventure game item icon, organic and hand-crafted feel. "
+    f"{NO_TEXT}"
 )
 
 # ── Bilder ────────────────────────────────────────────────────────────────────
