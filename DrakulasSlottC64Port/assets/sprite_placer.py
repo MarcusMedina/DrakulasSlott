@@ -155,6 +155,24 @@ class Placer:
         self.sw, self.sh = self.sprite_img.size
 
     def _center(self):
+        """Försök ladda sparad position; fall tillbaka på standard-mitten."""
+        key = (f"{os.path.splitext(self.rooms[self.ri])[0]}"
+               f"__{os.path.splitext(self.sprites[self.si])[0]}")
+        if os.path.exists(POSITIONS):
+            try:
+                with open(POSITIONS) as f:
+                    data = json.load(f)
+                if key in data:
+                    entry = data[key]
+                    saved_scale = entry.get("scale", self.scale)
+                    if saved_scale != self.scale:
+                        self.scale = saved_scale
+                        self._load_sprite()
+                    self.sx, self.sy = entry["px"]
+                    return
+            except Exception:
+                pass
+        # Ingen sparad position — default
         self.sx = (self.rw - self.sw) // 2
         self.sy = int(self.rh * 0.70) - self.sh // 2
 
