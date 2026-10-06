@@ -17,17 +17,25 @@ API_URL = "https://openrouter.ai/api/v1/images/generations"
 MODEL = "google/gemini-2.5-flash-image"
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Gäller alla rum — inga föremål, inga figurer, ingen text
+NO_TEXT = "no text, no letters, no words, no captions, no titles, no watermarks, no labels"
+NO_CHARS = "no people, no characters, no figures, no humans, no skeletons, no monsters, no creatures, empty room"
+NO_ITEMS = "no items on display, no objects that can be picked up"
+
 STYLE = (
-    "Commodore 64 pixel art with hand-drawn fantasy illustration style, "
-    "16-color limited palette, chunky expressive pixels with visible brushstroke texture, "
-    "gothic dark atmosphere, warm candlelight and cold moonlight contrasts, "
-    "style of classic Sierra On-Line adventure games meets fantasy ink sketch, "
-    "rough organic pixel edges, not sterile — feels hand-crafted and alive"
+    f"Commodore 64 pixel art with hand-drawn fantasy illustration style, "
+    f"16-color limited palette, chunky expressive pixels with visible brushstroke texture, "
+    f"gothic dark atmosphere, warm candlelight and cold moonlight contrasts, "
+    f"style of classic Sierra On-Line adventure games meets fantasy ink sketch, "
+    f"rough organic pixel edges, not sterile — feels hand-crafted and alive. "
+    f"{NO_TEXT}, {NO_CHARS}"
 )
 SPRITE_STYLE = (
     "Commodore 64 pixel art with hand-drawn fantasy illustration style, "
     "16-color limited palette, chunky expressive pixels, isolated object centered on solid black background, "
-    "classic adventure game item icon, organic and hand-crafted feel"
+    "classic adventure game item icon, organic and hand-crafted feel. "
+    "no text, no letters, no words, no captions"
 )
 
 # ── Bilder ────────────────────────────────────────────────────────────────────
@@ -57,199 +65,127 @@ IMAGES = [
      f"Extreme close-up from below angle. Deep red and black atmosphere, final, terrifying. {STYLE}",
      1536, 1024, "special"),
 
-    # --- Rumbilder ---
+    # --- Rumbilder (tomma rum — inga plockvara-föremål, inga figurer) ---
     ("rooms/01_hallen.png",
      f"Gothic castle entrance hall interior. Stone floor with cracked tiles, tall arched doorway "
-     f"with stone pillars. Large antique grandfather clock against the wall, dark wood, tall. "
-     f"Old wooden sign near entrance. Cobwebs in corners. Dark blue-purple atmosphere, "
+     f"with stone pillars. Cobwebs in corners. Dark blue-purple atmosphere, "
      f"orange torchlight from off-screen. {STYLE}",
      1536, 1024, "rooms"),
 
     ("rooms/02_lasrummet.png",
-     f"Gothic castle reading room, roaring fire in large brick fireplace dominating the back wall. "
-     f"Warm orange and yellow flames, dark stone surround. Armchair silhouette to one side. "
-     f"Flickering firelight on dark stone walls, books in shadows. Fire is the only light source. {STYLE}",
-     1536, 1024, "rooms"),
-
-    ("rooms/02_lasrummet_a.png",
-     f"Gothic castle reading room, large roaring fire in brick fireplace, clearly impassable wall of flame. "
-     f"Warm orange glow fills the room, fire is dominant light source. {STYLE}",
-     1536, 1024, "rooms"),
-
-    ("rooms/02_lasrummet_b.png",
-     f"Gothic castle reading room, fireplace now cold and dark, pile of grey ash where fire was. "
-     f"Dark opening visible in back of the cold hearth - a secret passage through the fireplace. "
-     f"Cold blue-grey atmosphere, dim ambient light, ominous dark opening. {STYLE}",
+     f"Gothic castle reading room. Large empty brick fireplace dominating the back wall, cold and dark, no fire. "
+     f"Armchair to one side, ancient bookshelves lining the walls. "
+     f"Cold dim atmosphere, only ambient light. The fireplace is clearly unlit and empty. {STYLE}",
      1536, 1024, "rooms"),
 
     ("rooms/03_biblioteket.png",
      f"Gothic castle library interior. Floor-to-ceiling bookshelves packed with ancient leather-bound books. "
-     f"Large wooden bookshelf unit dominates the scene. Rolled scroll on reading table in foreground. "
+     f"Reading table in foreground, empty surface. "
      f"Dusty, dark, candlelight, stone walls between shelves. Deep blue-purple shadows. {STYLE}",
      1536, 1024, "rooms"),
 
     ("rooms/04_vapen_kammaren.png",
-     f"Gothic castle armory interior. Stone walls covered with mounted weapons: swords, shields, spears. "
-     f"Large battle axe prominently displayed on wooden stand in center-foreground. "
+     f"Gothic castle armory interior. Stone walls covered with mounted weapons: swords, shields, spears on racks. "
+     f"Empty weapon stand in center-foreground. "
      f"Suit of armor in corner, crossed swords on wall. Dark cold atmosphere, dim torchlight. {STYLE}",
      1536, 1024, "rooms"),
 
     ("rooms/05_tornet.png",
      f"Gothic castle tower interior. Circular stone tower room, spiral staircase on curved walls. "
      f"Tall narrow window showing night sky with full moon. Stone balcony ledge through large arched opening. "
-     f"Heavy sledgehammer leaning against wall. Cold blue moonlight, dark stone. {STYLE}",
+     f"Cold blue moonlight, dark stone, empty floor. {STYLE}",
      1536, 1024, "rooms"),
 
     ("rooms/06_lagre_tornet.png",
      f"Gothic castle lower tower storage room. Low-ceilinged stone room at base of tower. "
-     f"Pair of wooden oars propped against stone wall. Damp walls, moss between stones, "
-     f"small barred window near ceiling. Cold blue-grey atmosphere, barely lit. {STYLE}",
+     f"Empty stone walls, damp moss between stones, small barred window near ceiling. "
+     f"Cold blue-grey atmosphere, barely lit. {STYLE}",
      1536, 1024, "rooms"),
 
     ("rooms/07_kapellet.png",
      f"Gothic castle chapel interior. Stone chapel with vaulted ceiling, tall narrow stained glass windows "
-     f"in purple and blue. Stone altar at back with crucifix. On the altar: ornate iron key and small "
-     f"glass vial of holy water. Rows of pews. Cool purple-blue light through stained glass. {STYLE}",
+     f"in purple and blue. Stone altar at back with crucifix, empty altar surface. Rows of pews. "
+     f"Cool purple-blue light through stained glass. {STYLE}",
      1536, 1024, "rooms"),
 
     ("rooms/08_eldstaden_av_tegel.png",
-     f"Gothic castle room with massive ornate brick fireplace structure on entire back wall, currently unlit. "
-     f"Lit torch in iron wall bracket to the side. Heavy stone floor, dark atmosphere, only torch for light. "
-     f"Red and brown brick details, orange torchlight. {STYLE}",
-     1536, 1024, "rooms"),
-
-    ("rooms/08_eldstaden_av_tegel_a.png",
-     f"Gothic castle room with massive intact ornate brick fireplace, imposing stone wall, cold and dark. "
-     f"Lit torch on wall. Heavy stone floor. {STYLE}",
-     1536, 1024, "rooms"),
-
-    ("rooms/08_eldstaden_av_tegel_b.png",
-     f"Gothic castle room, massive brick fireplace smashed open with a sledgehammer. "
-     f"Bricks scattered on stone floor, dark opening in wall where fireplace stood revealing secret passage beyond. "
-     f"Rubble and broken bricks, dust in the air, darkness in the opening. {STYLE}",
+     f"Gothic castle room with massive ornate brick fireplace structure filling the entire back wall, intact and whole. "
+     f"Lit torch in iron wall bracket to the side. Heavy stone floor, dark atmosphere. "
+     f"Red and brown brick details, orange torchlight. The fireplace opening is empty and dark. {STYLE}",
      1536, 1024, "rooms"),
 
     ("rooms/09_den_gomda_korridoren.png",
      f"Gothic castle hidden corridor, narrow secret passageway behind a wall panel. "
-     f"Stone walls close on both sides. Coil of rope lying on damp stone floor. "
+     f"Stone walls close on both sides, empty floor. "
      f"Very dark, cobwebs everywhere, barely lit, mysterious. Deep shadows. {STYLE}",
      1536, 1024, "rooms"),
 
     ("rooms/10_den_hemliga_passagen.png",
      f"Gothic castle secret underground passage. Low tunnel carved through rock, rough uneven ceiling. "
      f"Dripping water, puddles reflecting dim light. Passage curves into darkness ahead. "
-     f"Claustrophobic, damp, mysterious. {STYLE}",
+     f"Claustrophobic, damp, mysterious. Empty corridor. {STYLE}",
      1536, 1024, "rooms"),
 
-    ("rooms/11_underjordisk_sjo.png",
-     f"Gothic underground lake cavern. Vast cave with still black lake in foreground. "
-     f"Rocky stone shore along bottom edge. Small wooden rowboat moored at shore, rope tied to iron ring. "
-     f"Stalactites from cavern ceiling. Mysterious phosphorescent blue glow from water. Eerie, vast, silent. {STYLE}",
+    # Sjön: två olika vyer (slottssidan och kapellsidan) — båten är sprite
+    ("rooms/11_sjo_slott.png",
+     f"Gothic underground lake cavern viewed from the castle shore. Vast cave, still black lake stretching forward. "
+     f"Rocky stone shore in foreground with an iron ring bolted to the rock. "
+     f"Stalactites from cavern ceiling. Phosphorescent blue water glow, passage visible on far shore. "
+     f"Eerie, vast, silent. Empty shore, no boat. {STYLE}",
      1536, 1024, "rooms"),
 
-    ("rooms/11_underjordisk_sjo_a.png",
-     f"Gothic underground lake cavern with small wooden rowboat moored at stone shore, "
-     f"rope tied to iron ring in the rock. Still black lake, stalactites, blue phosphorescent water glow. {STYLE}",
-     1536, 1024, "rooms"),
-
-    ("rooms/11_underjordisk_sjo_b.png",
-     f"Gothic underground lake cavern, no boat present. Empty stone shore, empty iron ring where boat was tied. "
-     f"Ripples on dark water, small boat barely visible far away in darkness. Eerie, vast, silent. {STYLE}",
+    ("rooms/11_sjo_kapell.png",
+     f"Gothic underground lake cavern viewed from the chapel shore, opposite side. "
+     f"Same vast underground lake but viewed from a different rocky shore. "
+     f"Stone steps cut into the rock leading up from the water. "
+     f"Stalactites, blue phosphorescent water glow, passage behind viewer implied. "
+     f"Eerie, vast, silent. Empty shore. {STYLE}",
      1536, 1024, "rooms"),
 
     ("rooms/12_en_bat.png",
-     f"View from inside small wooden rowboat on dark underground lake with oars ready. "
-     f"Looking forward across still black water. Stone cavern walls and ceiling on both sides. "
-     f"Darkness ahead with faint glow. Ripples around boat. Claustrophobic, blue-black water. {STYLE}",
-     1536, 1024, "rooms"),
-
-    ("rooms/12_en_bat_a.png",
-     f"View from inside small wooden rowboat on dark underground lake, oarlocks empty, no oars. "
-     f"Boat drifts motionless. Dark water surrounds, cave walls visible. Stranded feeling, cold dark water. {STYLE}",
-     1536, 1024, "rooms"),
-
-    ("rooms/12_en_bat_b.png",
-     f"View from inside small wooden rowboat on dark underground lake, pair of wooden oars in oarlocks ready to use. "
-     f"Boat faces across the dark water, faint glow ahead indicating far shore. Purposeful, forward-looking. {STYLE}",
+     f"View from inside a small empty wooden rowboat on a dark underground lake. "
+     f"Empty oarlocks, no oars present. Looking forward across still black water. "
+     f"Stone cavern walls and ceiling on both sides, darkness ahead with faint glow. "
+     f"Claustrophobic, blue-black water. {STYLE}",
      1536, 1024, "rooms"),
 
     ("rooms/13_alkemistens_laboratorium.png",
      f"Gothic alchemist's laboratory, cluttered stone room with wooden worktable covered in glass flasks, "
-     f"bubbling potions, books. Distinctive oil flask prominently on table. Distillation equipment, smoke, "
-     f"colored liquids, skull on shelf. Shelves of mysterious bottles. Green and yellow chemical glow. {STYLE}",
+     f"bubbling potions, open books. Distillation equipment, colored liquids in fixed flasks, skull on shelf. "
+     f"Shelves of mysterious bottles on walls. Green and yellow chemical glow. "
+     f"No loose portable items on the table. {STYLE}",
      1536, 1024, "rooms"),
 
     ("rooms/14_forvarings_rummet.png",
-     f"Gothic castle storage room filled with old wooden boxes, barrels, crates stacked against walls. "
-     f"Large wooden crate and metal bucket prominently in foreground. Dusty, cluttered, dim light from crack in ceiling. {STYLE}",
-     1536, 1024, "rooms"),
-
-    ("rooms/14_forvarings_rummet_a.png",
-     f"Gothic castle storage room, intact large wooden crate prominently in foreground, metal bucket nearby. "
-     f"Dusty, cluttered, dim light. {STYLE}",
-     1536, 1024, "rooms"),
-
-    ("rooms/14_forvarings_rummet_b.png",
-     f"Gothic castle storage room, wooden crate smashed open. Pile of sharp pointed wooden stakes and splintered planks "
-     f"scattered on stone floor where the box was. Jagged pointed wooden stakes clearly visible. Rest of room unchanged. {STYLE}",
+     f"Gothic castle storage room filled with old barrels and stacked crates against walls. "
+     f"Open floor space in center. Dusty, cluttered, dim light from crack in ceiling. {STYLE}",
      1536, 1024, "rooms"),
 
     ("rooms/15_takskagget.png",
      f"Gothic castle rooftop ledge at night, narrow battlement with low stone parapet. "
-     f"Night sky with full moon, bats silhouetted. Small cluster of iron nails and hook on stone ledge. "
+     f"Night sky with full moon, bats silhouetted. Empty stone ledge. "
      f"Wind-swept, cold, dangerous height, stone gargoyle in corner. Dark blue night sky, moonlight on grey stone. {STYLE}",
      1536, 1024, "rooms"),
 
     ("rooms/16_galleriet.png",
      f"Gothic castle portrait gallery. Long hall with stone floor, tall walls hung with large painting frames. "
-     f"Large decorative tapestry/gobelin nailed to ceiling and hanging dramatically on one wall. "
+     f"Large empty hooks high on one wall where something large once hung. "
      f"Old paintings of stern faces in gilded frames. Dim candelabra light. {STYLE}",
-     1536, 1024, "rooms"),
-
-    ("rooms/16_galleriet_a.png",
-     f"Gothic castle gallery, large tapestry nailed to ceiling and hanging from it, imposing and decorative. {STYLE}",
-     1536, 1024, "rooms"),
-
-    ("rooms/16_galleriet_b.png",
-     f"Gothic castle gallery, large tapestry crashed to stone floor - crumpled heap of heavy woven fabric. "
-     f"Iron nails scattered on floor, empty hooks on ceiling. Dust in air from the fall. {STYLE}",
      1536, 1024, "rooms"),
 
     ("rooms/17_sido_rummet.png",
      f"Gothic castle side room with heavy rusted iron door in far wall, clearly locked. "
-     f"Old corroded door with large iron hinges and visible keyhole. Chains near door. "
-     f"Dark and unwelcoming, torch on wall casting orange light on rusty door. {STYLE}",
-     1536, 1024, "rooms"),
-
-    ("rooms/17_sido_rummet_a.png",
-     f"Gothic castle side room with heavy rusted iron door, clearly locked and impassable. "
-     f"Old corroded iron hinges, visible keyhole, torch on wall. {STYLE}",
-     1536, 1024, "rooms"),
-
-    ("rooms/17_sido_rummet_b.png",
-     f"Gothic castle side room, heavy iron door now open and swinging ajar on creaking hinges. "
-     f"Beyond the doorway: darkness, stairs descending into unknown. Door is oiled, hinges no longer rusty. "
-     f"Key on floor nearby. {STYLE}",
+     f"Old corroded door with large iron hinges and visible keyhole. "
+     f"Dark and unwelcoming, torch on wall casting orange light on rusty door. Empty room. {STYLE}",
      1536, 1024, "rooms"),
 
     ("rooms/18_wampyrernas_grav.png",
      f"Gothic vampire crypt interior. Underground crypt with vaulted stone ceiling, stone sarcophagi on walls. "
-     f"Center: large ornate wooden coffin closed with iron clasps. Candles on stone ledges, dripping wax. "
+     f"Center: large ornate wooden coffin CLOSED with iron clasps, lid shut. Candles on stone ledges, dripping wax. "
      f"Cobwebs, bat hanging from ceiling. Extremely dark, ominous, purple-black shadows. {STYLE}",
      1536, 1024, "rooms"),
 
-    ("rooms/18_wampyrernas_grav_a.png",
-     f"Gothic vampire crypt, large ornate wooden coffin shut with iron clasps. Candles, cobwebs, stone sarcophagi. "
-     f"Ominous, purple-black shadows. {STYLE}",
-     1536, 1024, "rooms"),
-
-    ("rooms/18_wampyrernas_grav_b.png",
-     f"Gothic vampire crypt, ornate coffin lid thrown open revealing pale vampire inside, black cape, "
-     f"eyes closed, hands crossed on chest, still as death. Extremely pale, fangs just visible. "
-     f"Red-purple atmosphere, cold candlelight, ominous. {STYLE}",
-     1536, 1024, "rooms"),
-
-    # --- Sprites ---
+    # --- Plockvara-sprites (föremål spelaren kan ta) ---
     ("sprites/slagga.png",
      f"Heavy sledgehammer, large grey metal hammerhead on long brown wooden handle. "
      f"Isolated object centered in frame. {SPRITE_STYLE}",
@@ -313,6 +249,47 @@ IMAGES = [
     ("sprites/spikar.png",
      f"Cluster of large iron nails, dark grey metal, scattered or bundled together. "
      f"Isolated object centered in frame. {SPRITE_STYLE}",
+     1024, 1024, "sprites"),
+
+    # --- Tillstånds-sprites (läggs ovanpå rumsbilder vid spelhandelse) ---
+    ("sprites/eld_kamin.png",
+     f"Roaring fire burning in a fireplace opening, bright orange and yellow flames, "
+     f"glowing embers at the base, heat shimmer. Transparent-edge sprite for compositing. "
+     f"Isolated on black background. {SPRITE_STYLE}",
+     1024, 1024, "sprites"),
+
+    ("sprites/aska.png",
+     f"Cold pile of grey ash and embers in a fireplace, no fire, scattered charred wood chunks. "
+     f"Pale grey and black ash. Isolated on black background. {SPRITE_STYLE}",
+     1024, 1024, "sprites"),
+
+    ("sprites/eldstad_sonderslagen.png",
+     f"Smashed brick fireplace opening — broken bricks and rubble piled at base, "
+     f"dark jagged hole in the wall where the fireplace back was, secret passage darkness beyond. "
+     f"Isolated on black background. {SPRITE_STYLE}",
+     1024, 1024, "sprites"),
+
+    ("sprites/dörr_öppen.png",
+     f"Heavy rusted iron door standing open, swung wide on large iron hinges, "
+     f"darkness visible through the doorway. Door edge and frame only, no surrounding wall. "
+     f"Isolated on black background. {SPRITE_STYLE}",
+     1024, 1024, "sprites"),
+
+    ("sprites/vampyr_i_kista.png",
+     f"Interior of an open wooden coffin lid thrown back, pale vampire lying inside — "
+     f"black cape, white face, hands crossed on chest, eyes closed, sleeping or dead. "
+     f"Coffin interior only, dramatic candle-lit top-down view. Isolated on black background. {SPRITE_STYLE}",
+     1024, 1024, "sprites"),
+
+    ("sprites/gobelas_fallen.png",
+     f"Large heavy woven tapestry/gobelin crumpled on a stone floor — thick fabric in a heap, "
+     f"loose iron nails scattered around it. Isolated on black background. {SPRITE_STYLE}",
+     1024, 1024, "sprites"),
+
+    ("sprites/ekan_vid_strand.png",
+     f"Small wooden rowboat moored at a rocky stone shore, rope tied to an iron ring. "
+     f"Boat from above-and-side angle, oarlocks visible, rope taut. "
+     f"Isolated on black background. {SPRITE_STYLE}",
      1024, 1024, "sprites"),
 ]
 
