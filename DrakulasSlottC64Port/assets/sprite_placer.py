@@ -231,7 +231,10 @@ class Placer:
                     return
             except Exception:
                 pass
-        # Ingen sparad position — default
+        # Ingen sparad position — återställ till default
+        self.scale    = SCALE_DEFAULT
+        self.rotation = 0
+        self._load_sprite()
         self.sx = (self.rw - self.sw) // 2
         self.sy = int(self.rh * 0.70) - self.sh // 2
 
