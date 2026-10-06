@@ -180,6 +180,37 @@ class Placer:
         self.sx = max(-(self.sw // 2), min(self.rw - self.sw // 2, self.sx + dx))
         self.sy = max(-(self.sh // 2), min(self.rh - self.sh // 2, self.sy + dy))
 
+    def disp_to_room(self, mx: int, my: int) -> tuple[int, int]:
+        """Konvertera muskoordinater (display) till rum-pixlar."""
+        rx = int(mx * self.rw / self.disp_w)
+        ry = int(my * self.rh / self.disp_h)
+        return rx, ry
+
+    def start_drag(self, mx: int, my: int) -> bool:
+        """Starta drag om musen är inom spritens bounding box. Returnerar True vid träff."""
+        rx, ry = self.disp_to_room(mx, my)
+        if self.sx <= rx <= self.sx + self.sw and self.sy <= ry <= self.sy + self.sh:
+            self._drag_offset = (rx - self.sx, ry - self.sy)
+            self.dragging = True
+            return True
+        # Klick utanför — teleportera spritens centrum dit ändå
+        self.sx = rx - self.sw // 2
+        self.sy = ry - self.sh // 2
+        self._drag_offset = (self.sw // 2, self.sh // 2)
+        self.dragging = True
+        return True
+
+    def drag_to(self, mx: int, my: int):
+        if not getattr(self, "dragging", False):
+            return
+        rx, ry = self.disp_to_room(mx, my)
+        ox, oy = self._drag_offset
+        self.sx = max(-(self.sw // 2), min(self.rw - self.sw // 2, rx - ox))
+        self.sy = max(-(self.sh // 2), min(self.rh - self.sh // 2, ry - oy))
+
+    def stop_drag(self):
+        self.dragging = False
+
     def rescale(self, delta: float):
         # Behåll centrum vid skalning
         cx = self.sx + self.sw // 2
@@ -210,7 +241,7 @@ class Placer:
         status = (f"  {self.rooms[self.ri]}  +  {self.sprites[self.si]}"
                   f"   px({self.sx},{self.sy})  {pct_x:.1f}%,{pct_y:.1f}%"
                   f"   skala {self.scale*100:.0f}%"
-                  f"   +/- storlek   R/P byt rum/sprite   S spara   Esc tillbaka")
+                  f"   +/- storlek   ↑↓←→ 1px  Shift=10px   dra med mus   R/P byt   S spara   Esc tillbaka")
         lbl = font.render(status, True, (200, 200, 200))
         pygame.draw.rect(screen, (20, 20, 20), (0, self.disp_h, WIN_W, PANEL_H))
         screen.blit(lbl, (4, self.disp_h + 7))
@@ -307,7 +338,7 @@ def main():
 
                 # ── Placering ──
                 elif mode == MODE_PLACE and placer:
-                    step = 1 if shift else 10
+                    step = 10 if shift else 1
                     if event.key == pygame.K_UP:       placer.move(0, -step)
                     elif event.key == pygame.K_DOWN:   placer.move(0,  step)
                     elif event.key == pygame.K_LEFT:   placer.move(-step, 0)
@@ -332,6 +363,21 @@ def main():
                     else:
                         continue
                     placer.render(screen, font)
+
+            # ── Mus-drag (bara i placeringsläget) ──
+            elif event.type == pygame.MOUSEBUTTONDOWN and mode == MODE_PLACE and placer:
+                if event.button == 1:
+                    placer.start_drag(*event.pos)
+                    placer.render(screen, font)
+
+            elif event.type == pygame.MOUSEMOTION and mode == MODE_PLACE and placer:
+                if getattr(placer, "dragging", False):
+                    placer.drag_to(*event.pos)
+                    placer.render(screen, font)
+
+            elif event.type == pygame.MOUSEBUTTONUP and mode == MODE_PLACE and placer:
+                if event.button == 1:
+                    placer.stop_drag()
 
     pygame.quit()
 
