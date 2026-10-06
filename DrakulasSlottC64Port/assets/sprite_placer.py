@@ -197,6 +197,7 @@ class Placer:
     def cycle_sprite(self, d: int):
         self.si = (self.si + d) % len(self.sprites)
         self._load_sprite()
+        self._center()
 
     def render(self, screen: "pygame.Surface", font: "pygame.Font"):
         comp = composite(self.room_img, self.sprite_img, self.sx, self.sy)
