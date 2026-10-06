@@ -678,6 +678,13 @@ namespace DrakulasSlott.Game
                 goto Row330;
             }
 
+            // Kan inte lägga ner årorna i båten — annars kan man inte ro (softlock)
+            if (L == 12 && S == 12)
+            {
+                Print("DET VORE DUMT ATT TAPPA ÅROR I VATTNET");
+                goto Row330;
+            }
+
             // 890 IF L(S-6)<>0THEN855
             if (La[S - 6] != 0)
             {
