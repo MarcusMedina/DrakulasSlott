@@ -3,15 +3,23 @@
 # dependencies = ["Pillow", "pygame"]
 # ///
 """
-Interaktiv sprite-placerare — flytta en sprite med piltangenterna.
+Interaktiv sprite-placerare.
 
-Kör: uv run sprite_placer.py <rumsbild> <sprite>
+Startar med ett urvalsfönster — välj rum och sprite med piltangenterna.
+Tryck Enter för att gå till placeringsläget.
 
-Kontroller:
+Placeringsläge:
   Piltangenter          — flytta 10 px
   Shift + piltangenter  — flytta 1 px
-  S                     — spara position till sprite_positions.json + PNG-preview
-  Q / Escape            — avsluta
+  ] / [                 — förstora / förminska sprite (10%)
+  Shift + ] / [         — förstora / förminska sprite (1%)
+  R                     — byt rum (nästa i listan)
+  Shift+R               — byt rum (föregående)
+  P                     — byt sprite (nästa)
+  Shift+P               — byt sprite (föregående)
+  S                     — spara till sprite_positions.json + PNG-preview
+  Escape                — tillbaka till urval
+  Q                     — avsluta
 """
 
 import argparse
@@ -22,95 +30,174 @@ import sys
 try:
     from PIL import Image, ImageChops
 except ImportError:
-    sys.exit("Pillow saknas. Kör: uv run sprite_placer.py ...")
+    sys.exit("Saknar Pillow. Kör: uv run sprite_placer.py")
 
 try:
     import pygame
 except ImportError:
-    sys.exit("pygame saknas. Kör: uv run sprite_placer.py ...")
+    sys.exit("Saknar pygame. Kör: uv run sprite_placer.py")
 
-BASE_DIR  = os.path.dirname(os.path.abspath(__file__))
-POSITIONS = os.path.join(BASE_DIR, "sprite_positions.json")
+BASE_DIR      = os.path.dirname(os.path.abspath(__file__))
+ROOMS_DIR     = os.path.join(BASE_DIR, "rooms")
+SPRITES_DIR   = os.path.join(BASE_DIR, "sprites")
+POSITIONS     = os.path.join(BASE_DIR, "sprite_positions.json")
+PREVIEW_DIR   = os.path.join(BASE_DIR, "preview")
 
-DISPLAY_MAX_W = 1280
-DISPLAY_MAX_H = 800
+WIN_W, WIN_H  = 1280, 820
+PANEL_H       = 30       # statusrad längst ned
+SCALE_DEFAULT = 0.35     # sprite-höjd som andel av rumshöjd
+SCALE_MIN     = 0.05
+SCALE_MAX     = 1.20
 
 
-def make_sprite(path: str, room_h: int) -> Image.Image:
-    raw = Image.open(path).convert("RGBA")
-    h   = int(room_h * 0.35)
-    w   = int(raw.width * h / raw.height)
+# ── Bildhjälpare ─────────────────────────────────────────────────────────────
+
+def list_pngs(folder: str) -> list[str]:
+    return sorted(f for f in os.listdir(folder) if f.lower().endswith(".png"))
+
+
+def load_room(name: str) -> Image.Image:
+    return Image.open(os.path.join(ROOMS_DIR, name)).convert("RGBA")
+
+
+def build_sprite(name: str, room_h: int, scale: float) -> Image.Image:
+    raw = Image.open(os.path.join(SPRITES_DIR, name)).convert("RGBA")
+    h   = max(1, int(room_h * scale))
+    w   = max(1, int(raw.width * h / raw.height))
     spr = raw.resize((w, h), Image.LANCZOS)
     r, g, b, a = spr.split()
-    thr   = 30
-    mr    = r.point(lambda v: 255 if v > thr else 0)
-    mg    = g.point(lambda v: 255 if v > thr else 0)
-    mb    = b.point(lambda v: 255 if v > thr else 0)
-    mask  = ImageChops.lighter(ImageChops.lighter(mr, mg), mb)
+    thr  = 30
+    mr   = r.point(lambda v: 255 if v > thr else 0)
+    mg   = g.point(lambda v: 255 if v > thr else 0)
+    mb   = b.point(lambda v: 255 if v > thr else 0)
+    mask = ImageChops.lighter(ImageChops.lighter(mr, mg), mb)
     spr.putalpha(mask)
     return spr
 
 
-def composite_pil(room: Image.Image, sprite: Image.Image, x: int, y: int) -> Image.Image:
+def composite(room: Image.Image, sprite: Image.Image, x: int, y: int) -> Image.Image:
     out = room.copy().convert("RGBA")
     out.paste(sprite, (x, y), sprite)
     return out.convert("RGB")
 
 
-def pil_to_surface(img: Image.Image) -> "pygame.Surface":
-    return pygame.image.fromstring(img.tobytes(), img.size, img.mode)
+def pil_to_surf(img: Image.Image, w: int, h: int) -> "pygame.Surface":
+    small = img.resize((w, h), Image.LANCZOS)
+    return pygame.image.fromstring(small.tobytes(), small.size, small.mode)
 
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("room",   help="Rumsbild (relativ eller absolut sökväg)")
-    parser.add_argument("sprite", help="Sprite (relativ eller absolut sökväg)")
-    args = parser.parse_args()
+# ── Urvalsfönster ─────────────────────────────────────────────────────────────
 
-    def resolve(p):
-        return p if (os.path.isabs(p) or os.path.exists(p)) else os.path.join(BASE_DIR, p)
+def selection_screen(screen: "pygame.Surface", font: "pygame.Font",
+                     rooms: list[str], sprites: list[str],
+                     ri: int, si: int, focus: int) -> tuple[int, int, int, bool]:
+    """Ritar urvalspanelen. Returnerar (ri, si, focus, confirmed)."""
+    W, H = screen.get_size()
+    col_w = W // 2
 
-    room_path   = resolve(args.room)
-    sprite_path = resolve(args.sprite)
+    screen.fill((20, 20, 30))
 
-    room_img   = Image.open(room_path).convert("RGBA")
-    sprite_img = make_sprite(sprite_path, room_img.height)
+    for col, items, idx, label in [
+        (0, rooms,   ri, "RUM"),
+        (1, sprites, si, "SPRITES"),
+    ]:
+        x0 = col * col_w
+        active = (focus == col)
+        hdr_color = (200, 160, 80) if active else (120, 100, 60)
+        pygame.draw.rect(screen, (30, 30, 45), (x0, 0, col_w, H))
+        if active:
+            pygame.draw.rect(screen, (60, 60, 100), (x0, 0, col_w, H), 2)
 
-    rw, rh = room_img.size
-    sw, sh = sprite_img.size
+        hdr = font.render(f"── {label} ──  (Tab för att byta)", True, hdr_color)
+        screen.blit(hdr, (x0 + 12, 10))
 
-    # Startposition: mitten horisontellt, 70% ner
-    sx = (rw - sw) // 2
-    sy = int(rh * 0.70) - sh // 2
+        row_h    = 22
+        visible  = (H - 50) // row_h
+        start    = max(0, idx - visible // 2)
+        for i, name in enumerate(items[start:start + visible]):
+            gi    = start + i
+            y     = 40 + i * row_h
+            color = (255, 220, 80) if gi == idx else (180, 180, 180)
+            bg    = (50, 50, 80)   if gi == idx else (30, 30, 45)
+            pygame.draw.rect(screen, bg, (x0 + 2, y - 1, col_w - 4, row_h - 2))
+            txt = font.render(f"  {name}", True, color)
+            screen.blit(txt, (x0 + 4, y + 1))
 
-    scale   = min(DISPLAY_MAX_W / rw, DISPLAY_MAX_H / rh, 1.0)
-    disp_w  = int(rw * scale)
-    disp_h  = int(rh * scale)
+    hint = font.render("Enter = öppna placeraren   Q = avsluta", True, (140, 140, 140))
+    screen.blit(hint, (W // 2 - hint.get_width() // 2, H - 22))
+    pygame.display.flip()
+    return ri, si, focus, False
 
-    pygame.init()
-    screen = pygame.display.set_mode((disp_w, disp_h + 28))
-    room_name   = os.path.basename(room_path)
-    sprite_name = os.path.basename(sprite_path)
-    pygame.display.set_caption(f"{room_name} + {sprite_name}")
-    font = pygame.font.SysFont("monospace", 13)
-    clock = pygame.time.Clock()
 
-    def redraw():
-        comp  = composite_pil(room_img, sprite_img, sx, sy)
-        small = comp.resize((disp_w, disp_h), Image.LANCZOS)
-        surf  = pil_to_surface(small)
-        screen.fill((30, 30, 30))
+# ── Placeringsläge ────────────────────────────────────────────────────────────
+
+class Placer:
+    def __init__(self, rooms: list[str], sprites: list[str], ri: int, si: int):
+        self.rooms   = rooms
+        self.sprites = sprites
+        self.ri      = ri
+        self.si      = si
+        self.scale   = SCALE_DEFAULT
+        self._load_room()
+        self._load_sprite()
+        self._center()
+
+    def _load_room(self):
+        self.room_img  = load_room(self.rooms[self.ri])
+        self.rw, self.rh = self.room_img.size
+        scale = min((WIN_W) / self.rw, (WIN_H - PANEL_H) / self.rh, 1.0)
+        self.disp_w = int(self.rw * scale)
+        self.disp_h = int(self.rh * scale)
+        self._load_sprite()
+
+    def _load_sprite(self):
+        self.sprite_img = build_sprite(self.sprites[self.si], self.rh, self.scale)
+        self.sw, self.sh = self.sprite_img.size
+
+    def _center(self):
+        self.sx = (self.rw - self.sw) // 2
+        self.sy = int(self.rh * 0.70) - self.sh // 2
+
+    def move(self, dx: int, dy: int):
+        self.sx = max(-(self.sw // 2), min(self.rw - self.sw // 2, self.sx + dx))
+        self.sy = max(-(self.sh // 2), min(self.rh - self.sh // 2, self.sy + dy))
+
+    def rescale(self, delta: float):
+        # Behåll centrum vid skalning
+        cx = self.sx + self.sw // 2
+        cy = self.sy + self.sh // 2
+        self.scale = max(SCALE_MIN, min(SCALE_MAX, self.scale + delta))
+        self._load_sprite()
+        self.sx = cx - self.sw // 2
+        self.sy = cy - self.sh // 2
+
+    def cycle_room(self, d: int):
+        self.ri = (self.ri + d) % len(self.rooms)
+        self._load_room()
+        self._center()
+
+    def cycle_sprite(self, d: int):
+        self.si = (self.si + d) % len(self.sprites)
+        self._load_sprite()
+
+    def render(self, screen: "pygame.Surface", font: "pygame.Font"):
+        comp = composite(self.room_img, self.sprite_img, self.sx, self.sy)
+        surf = pil_to_surf(comp, self.disp_w, self.disp_h)
+        screen.fill((0, 0, 0))
         screen.blit(surf, (0, 0))
 
-        pct_x = (sx + sw // 2) / rw * 100
-        pct_y = (sy + sh // 2) / rh * 100
-        txt = (f"  px ({sx}, {sy})   centrum {pct_x:.1f}%, {pct_y:.1f}%"
-               f"   ↑↓←→=10px  Shift=1px  S=spara  Q=avsluta")
-        label = font.render(txt, True, (200, 200, 200))
-        screen.blit(label, (4, disp_h + 6))
+        pct_x = (self.sx + self.sw // 2) / self.rw * 100
+        pct_y = (self.sy + self.sh // 2) / self.rh * 100
+        status = (f"  {self.rooms[self.ri]}  +  {self.sprites[self.si]}"
+                  f"   px({self.sx},{self.sy})  {pct_x:.1f}%,{pct_y:.1f}%"
+                  f"   skala {self.scale*100:.0f}%"
+                  f"   [/] storlek   R/P byt rum/sprite   S spara   Esc tillbaka")
+        lbl = font.render(status, True, (200, 200, 200))
+        pygame.draw.rect(screen, (20, 20, 20), (0, self.disp_h, WIN_W, PANEL_H))
+        screen.blit(lbl, (4, self.disp_h + 7))
         pygame.display.flip()
 
-    def save_pos():
+    def save(self):
         data: dict = {}
         if os.path.exists(POSITIONS):
             try:
@@ -118,50 +205,114 @@ def main():
                     data = json.load(f)
             except Exception:
                 pass
-
-        key   = f"{os.path.splitext(room_name)[0]}__{os.path.splitext(sprite_name)[0]}"
-        pct_x = (sx + sw // 2) / rw * 100
-        pct_y = (sy + sh // 2) / rh * 100
-        data[key] = {"px": [sx, sy], "pct": [round(pct_x, 1), round(pct_y, 1)]}
+        key   = (f"{os.path.splitext(self.rooms[self.ri])[0]}"
+                 f"__{os.path.splitext(self.sprites[self.si])[0]}")
+        pct_x = (self.sx + self.sw // 2) / self.rw * 100
+        pct_y = (self.sy + self.sh // 2) / self.rh * 100
+        data[key] = {
+            "px":    [self.sx, self.sy],
+            "pct":   [round(pct_x, 1), round(pct_y, 1)],
+            "scale": round(self.scale, 4),
+        }
         with open(POSITIONS, "w") as f:
             json.dump(data, f, indent=2)
+        os.makedirs(PREVIEW_DIR, exist_ok=True)
+        out = os.path.join(PREVIEW_DIR, f"{key}.png")
+        composite(self.room_img, self.sprite_img, self.sx, self.sy).save(out)
+        print(f"Sparat: {key}  px=({self.sx},{self.sy})  "
+              f"pct=({pct_x:.1f}%,{pct_y:.1f}%)  scale={self.scale:.3f}")
+        print(f"Preview: {out}")
+        pygame.display.set_caption(f"✓ Sparat — {key}")
 
-        out_dir  = os.path.join(BASE_DIR, "preview")
-        os.makedirs(out_dir, exist_ok=True)
-        out_path = os.path.join(out_dir, f"{key}.png")
-        composite_pil(room_img, sprite_img, sx, sy).save(out_path)
-        print(f"Sparat: {key}  px=({sx},{sy})  pct=({pct_x:.1f}%, {pct_y:.1f}%)")
-        print(f"Preview: {out_path}")
-        pygame.display.set_caption(f"Sparat! {key}")
 
-    redraw()
+# ── Huvudloop ─────────────────────────────────────────────────────────────────
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("room",   nargs="?", help="Startrum (filnamn)")
+    parser.add_argument("sprite", nargs="?", help="Startsprite (filnamn)")
+    args = parser.parse_args()
+
+    rooms   = list_pngs(ROOMS_DIR)
+    sprites = list_pngs(SPRITES_DIR)
+
+    if not rooms:   sys.exit(f"Inga PNG-filer i {ROOMS_DIR}")
+    if not sprites: sys.exit(f"Inga PNG-filer i {SPRITES_DIR}")
+
+    ri = rooms.index(args.room)     if args.room   in rooms   else 0
+    si = sprites.index(args.sprite) if args.sprite in sprites else 0
+
+    pygame.init()
+    screen = pygame.display.set_mode((WIN_W, WIN_H))
+    pygame.display.set_caption("Sprite Placer — Drakulas Slott")
+    font   = pygame.font.SysFont("monospace", 13)
+    clock  = pygame.time.Clock()
+
+    MODE_SELECT  = "select"
+    MODE_PLACE   = "place"
+    mode         = MODE_SELECT
+    focus        = 0   # 0 = rum-kolumn, 1 = sprite-kolumn
+    placer: Placer | None = None
+
+    selection_screen(screen, font, rooms, sprites, ri, si, focus)
+
     running = True
     while running:
         clock.tick(60)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+
             elif event.type == pygame.KEYDOWN:
                 shift = bool(event.mod & pygame.KMOD_SHIFT)
-                step  = 1 if shift else 10
-                if event.key == pygame.K_UP:
-                    sx_new, sy_new = sx, sy - step
-                elif event.key == pygame.K_DOWN:
-                    sx_new, sy_new = sx, sy + step
-                elif event.key == pygame.K_LEFT:
-                    sx_new, sy_new = sx - step, sy
-                elif event.key == pygame.K_RIGHT:
-                    sx_new, sy_new = sx + step, sy
-                elif event.key == pygame.K_s:
-                    save_pos(); continue
-                elif event.key in (pygame.K_q, pygame.K_ESCAPE):
-                    running = False; continue
-                else:
-                    continue
 
-                sx = max(-(sw // 2), min(rw - sw // 2, sx_new))
-                sy = max(-(sh // 2), min(rh - sh // 2, sy_new))
-                redraw()
+                # ── Urval ──
+                if mode == MODE_SELECT:
+                    if event.key == pygame.K_TAB:
+                        focus = 1 - focus
+                    elif event.key == pygame.K_UP:
+                        if focus == 0: ri = (ri - 1) % len(rooms)
+                        else:          si = (si - 1) % len(sprites)
+                    elif event.key == pygame.K_DOWN:
+                        if focus == 0: ri = (ri + 1) % len(rooms)
+                        else:          si = (si + 1) % len(sprites)
+                    elif event.key == pygame.K_RETURN:
+                        placer = Placer(rooms, sprites, ri, si)
+                        mode   = MODE_PLACE
+                        placer.render(screen, font)
+                        continue
+                    elif event.key in (pygame.K_q, pygame.K_ESCAPE):
+                        running = False
+                        continue
+                    selection_screen(screen, font, rooms, sprites, ri, si, focus)
+
+                # ── Placering ──
+                elif mode == MODE_PLACE and placer:
+                    step = 1 if shift else 10
+                    if event.key == pygame.K_UP:       placer.move(0, -step)
+                    elif event.key == pygame.K_DOWN:   placer.move(0,  step)
+                    elif event.key == pygame.K_LEFT:   placer.move(-step, 0)
+                    elif event.key == pygame.K_RIGHT:  placer.move( step, 0)
+                    elif event.key == pygame.K_RIGHTBRACKET:
+                        placer.rescale(0.01 if shift else 0.10)
+                    elif event.key == pygame.K_LEFTBRACKET:
+                        placer.rescale(-0.01 if shift else -0.10)
+                    elif event.key == pygame.K_r:
+                        placer.cycle_room(-1 if shift else 1)
+                    elif event.key == pygame.K_p:
+                        placer.cycle_sprite(-1 if shift else 1)
+                    elif event.key == pygame.K_s:
+                        placer.save(); continue
+                    elif event.key == pygame.K_ESCAPE:
+                        ri, si = placer.ri, placer.si
+                        mode   = MODE_SELECT
+                        selection_screen(screen, font, rooms, sprites, ri, si, focus)
+                        continue
+                    elif event.key in (pygame.K_q,):
+                        running = False; continue
+                    else:
+                        continue
+                    placer.render(screen, font)
 
     pygame.quit()
 
