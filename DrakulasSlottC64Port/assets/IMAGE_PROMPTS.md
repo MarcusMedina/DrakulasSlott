@@ -11,6 +11,46 @@ Sprites ska ha:
 
 ---
 
+## 🎬 Specialbilder (special/)
+
+### intro.png — Titelskärm
+Spara som: `special/intro.png`
+```
+Commodore 64 pixel art, 320x200, gothic horror title screen.
+Dramatic exterior view of a towering medieval castle silhouetted against a full moon at night.
+Lightning bolt in stormy purple-black sky illuminates the castle.
+Bats flying around the tallest tower. Dead trees in foreground.
+At the bottom in large blocky C64-style letters: "DRAKULAS SLOTT"
+Iconic, atmospheric, 1980s horror game title screen energy.
+16-color limited palette, hard pixel edges, no anti-aliasing, retro 1980s game art style.
+```
+
+### ending_win.png — Vampyren dödad (du vann)
+Spara som: `special/ending_win.png`
+```
+Commodore 64 pixel art, 320x200, gothic horror victory scene.
+Inside a dark crypt, an open coffin in the center. A vampire lies motionless inside,
+a sharp wooden stake driven through its chest. The vampire is pale, eyes closed, defeated.
+Rays of light begin to pierce the darkness from above. Dust particles in the air.
+A sense of triumph — the threat is ended. No player character visible, just the defeated vampire.
+Dark purple and gold atmosphere. Candles extinguished, only dawn light filtering in.
+16-color limited palette, hard pixel edges, no anti-aliasing, retro 1980s game art style.
+```
+
+### ending_lose.png — Vampyren tog dig (game over)
+Spara som: `special/ending_lose.png`
+```
+Commodore 64 pixel art, 320x200, gothic horror game over scene.
+A tall pale vampire in a black cape looms large in the frame, dominating the screen.
+Red glowing eyes, fangs bared, arms outstretched reaching toward the viewer.
+Dark castle corridor behind the vampire, torchlight from behind creating a menacing silhouette.
+Extreme close-up from below — the vampire looks massive and terrifying.
+Deep red and black atmosphere, ominous, final.
+16-color limited palette, hard pixel edges, no anti-aliasing, retro 1980s game art style.
+```
+
+---
+
 ## 🏰 Rumbilder (rooms/)
 
 ### 01_hallen.png — HALLEN
