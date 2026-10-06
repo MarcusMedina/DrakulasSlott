@@ -209,7 +209,7 @@ class Placer:
         status = (f"  {self.rooms[self.ri]}  +  {self.sprites[self.si]}"
                   f"   px({self.sx},{self.sy})  {pct_x:.1f}%,{pct_y:.1f}%"
                   f"   skala {self.scale*100:.0f}%"
-                  f"   [/] storlek   R/P byt rum/sprite   S spara   Esc tillbaka")
+                  f"   +/- storlek   R/P byt rum/sprite   S spara   Esc tillbaka")
         lbl = font.render(status, True, (200, 200, 200))
         pygame.draw.rect(screen, (20, 20, 20), (0, self.disp_h, WIN_W, PANEL_H))
         screen.blit(lbl, (4, self.disp_h + 7))
@@ -311,9 +311,9 @@ def main():
                     elif event.key == pygame.K_DOWN:   placer.move(0,  step)
                     elif event.key == pygame.K_LEFT:   placer.move(-step, 0)
                     elif event.key == pygame.K_RIGHT:  placer.move( step, 0)
-                    elif event.key == pygame.K_RIGHTBRACKET:
+                    elif event.key in (pygame.K_PLUS, pygame.K_KP_PLUS, pygame.K_EQUALS):
                         placer.rescale(0.01 if shift else 0.10)
-                    elif event.key == pygame.K_LEFTBRACKET:
+                    elif event.key in (pygame.K_MINUS, pygame.K_KP_MINUS):
                         placer.rescale(-0.01 if shift else -0.10)
                     elif event.key == pygame.K_r:
                         placer.cycle_room(-1 if shift else 1)
