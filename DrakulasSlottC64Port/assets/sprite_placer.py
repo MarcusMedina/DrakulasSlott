@@ -189,11 +189,12 @@ def selection_screen(screen: "pygame.Surface", font: "pygame.Font",
 
 class Placer:
     def __init__(self, rooms: list[str], sprites: list[str], ri: int, si: int):
-        self.rooms   = rooms
-        self.sprites = sprites
-        self.ri      = ri
-        self.si      = si
-        self.scale   = SCALE_DEFAULT
+        self.rooms    = rooms
+        self.sprites  = sprites
+        self.ri       = ri
+        self.si       = si
+        self.scale    = SCALE_DEFAULT
+        self.rotation = 0
         self._load_room()
         self._load_sprite()
         self._center()
@@ -207,7 +208,10 @@ class Placer:
         self._load_sprite()
 
     def _load_sprite(self):
-        self.sprite_img = build_sprite(self.sprites[self.si], self.rh, self.scale)
+        raw = build_sprite(self.sprites[self.si], self.rh, self.scale)
+        if self.rotation % 360 != 0:
+            raw = raw.rotate(-self.rotation, expand=True, resample=Image.BICUBIC)
+        self.sprite_img = raw
         self.sw, self.sh = self.sprite_img.size
 
     def _center(self):
@@ -220,10 +224,9 @@ class Placer:
                     data = json.load(f)
                 if key in data:
                     entry = data[key]
-                    saved_scale = entry.get("scale", self.scale)
-                    if saved_scale != self.scale:
-                        self.scale = saved_scale
-                        self._load_sprite()
+                    self.scale    = entry.get("scale",    self.scale)
+                    self.rotation = entry.get("rotation", 0)
+                    self._load_sprite()
                     self.sx, self.sy = entry["px"]
                     return
             except Exception:
@@ -268,10 +271,17 @@ class Placer:
         self.dragging = False
 
     def rescale(self, delta: float):
-        # Behåll centrum vid skalning
         cx = self.sx + self.sw // 2
         cy = self.sy + self.sh // 2
         self.scale = max(SCALE_MIN, min(SCALE_MAX, self.scale + delta))
+        self._load_sprite()
+        self.sx = cx - self.sw // 2
+        self.sy = cy - self.sh // 2
+
+    def rotate(self, delta: int):
+        cx = self.sx + self.sw // 2
+        cy = self.sy + self.sh // 2
+        self.rotation = (self.rotation + delta) % 360
         self._load_sprite()
         self.sx = cx - self.sw // 2
         self.sy = cy - self.sh // 2
@@ -299,8 +309,8 @@ class Placer:
         stype  = (sprite_cfg or {}).get(sname, {}).get("type", "?")
         status = (f"  [{stype}] {self.rooms[self.ri]}  +  {sname}"
                   f"   px({self.sx},{self.sy})  {pct_x:.1f}%,{pct_y:.1f}%"
-                  f"   skala {self.scale*100:.0f}%"
-                  f"   +/- storlek   ↑↓←→ 1px  Shift=10px   dra med mus   R/P byt   S spara   Esc tillbaka")
+                  f"   skala {self.scale*100:.0f}%   rot {self.rotation}°"
+                  f"   +/- storlek   ,/. rotera   ↑↓←→ 1px  Shift=10px   dra med mus   R/P byt   S spara   Esc")
         lbl = font.render(status, True, (200, 200, 200))
         pygame.draw.rect(screen, (20, 20, 20), (0, self.disp_h, WIN_W, PANEL_H))
         screen.blit(lbl, (4, self.disp_h + 7))
@@ -319,9 +329,10 @@ class Placer:
         pct_x = (self.sx + self.sw // 2) / self.rw * 100
         pct_y = (self.sy + self.sh // 2) / self.rh * 100
         data[key] = {
-            "px":    [self.sx, self.sy],
-            "pct":   [round(pct_x, 1), round(pct_y, 1)],
-            "scale": round(self.scale, 4),
+            "px":       [self.sx, self.sy],
+            "pct":      [round(pct_x, 1), round(pct_y, 1)],
+            "scale":    round(self.scale, 4),
+            "rotation": self.rotation,
         }
         with open(POSITIONS, "w") as f:
             json.dump(data, f, indent=2)
@@ -411,6 +422,10 @@ def main():
                         placer.rescale(0.01 if shift else 0.10)
                     elif event.key in (pygame.K_MINUS, pygame.K_KP_MINUS):
                         placer.rescale(-0.01 if shift else -0.10)
+                    elif event.key == pygame.K_PERIOD:
+                        placer.rotate(1 if shift else 15)
+                    elif event.key == pygame.K_COMMA:
+                        placer.rotate(-1 if shift else -15)
                     elif event.key == pygame.K_r:
                         placer.cycle_room(-1 if shift else 1)
                     elif event.key == pygame.K_p:
