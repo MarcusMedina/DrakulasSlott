@@ -1,23 +1,188 @@
 {
-  "_comment": "type: item = spelaren kan ta/släppa, state = händelsestyrd sprite",
-  "slagga.png":              { "type": "item",  "label": "Slägga" },
-  "klocka.png":              { "type": "item",  "label": "Klocka" },
-  "rep.png":                 { "type": "item",  "label": "Rep" },
-  "pergament_rulle.png":     { "type": "item",  "label": "Pergamentrulle" },
-  "yxa.png":                 { "type": "item",  "label": "Yxa" },
-  "aror.png":                { "type": "item",  "label": "Åror" },
-  "nyckel.png":              { "type": "item",  "label": "Nyckel" },
-  "heligt_vatten.png":       { "type": "item",  "label": "Heligt vatten" },
-  "olje_flaska.png":         { "type": "item",  "label": "Oljeflaska" },
-  "lada.png":                { "type": "item",  "label": "Låda" },
-  "hink.png":                { "type": "item",  "label": "Hink" },
-  "fackla.png":              { "type": "item",  "label": "Fackla" },
-  "spikar.png":              { "type": "item",  "label": "Spikar" },
-  "eld_kamin.png":           { "type": "state", "label": "Eld i kamin" },
-  "aska.png":                { "type": "state", "label": "Aska" },
-  "eldstad_sonderslagen.png":{ "type": "state", "label": "Sönderslagen eldstad" },
-  "dörr_öppen.png":          { "type": "state", "label": "Öppen dörr" },
-  "vampyr_i_kista.png":      { "type": "state", "label": "Vampyr i kista" },
-  "gobelas_fallen.png":      { "type": "state", "label": "Gobeläng fallen" },
-  "ekan_vid_strand.png":     { "type": "state", "label": "Ekan vid strand" }
+  "_comment": "type: item=plockvara (visas i alla rum), state=händelsestyrd (visas bara i home_rooms). default_room = startrum i spelet.",
+  "slagga.png": {
+    "type": "item",
+    "label": "Slägga",
+    "default_room": "05_tornet",
+    "all_rooms": true
+  },
+  "klocka.png": {
+    "type": "item",
+    "label": "Fickur",
+    "default_room": "01_hallen",
+    "all_rooms": true
+  },
+  "rep.png": {
+    "type": "item",
+    "label": "Rep",
+    "default_room": "09_den_gomda_korridoren",
+    "all_rooms": true
+  },
+  "pergament_rulle.png": {
+    "type": "item",
+    "label": "Pergamentrulle",
+    "default_room": "03_biblioteket",
+    "all_rooms": true
+  },
+  "yxa.png": {
+    "type": "item",
+    "label": "Yxa",
+    "default_room": "04_vapen_kammaren",
+    "all_rooms": true
+  },
+  "aror.png": {
+    "type": "item",
+    "label": "Åror",
+    "default_room": "06_lagre_tornet",
+    "all_rooms": true
+  },
+  "nyckel.png": {
+    "type": "item",
+    "label": "Nyckel",
+    "default_room": "07_kapellet",
+    "all_rooms": true
+  },
+  "heligt_vatten.png": {
+    "type": "item",
+    "label": "Heligt vatten",
+    "default_room": "07_kapellet",
+    "all_rooms": true
+  },
+  "olje_flaska.png": {
+    "type": "item",
+    "label": "Oljeflaska",
+    "default_room": "13_alkemistens_laboratorium",
+    "all_rooms": true
+  },
+  "lada.png": {
+    "type": "item",
+    "label": "Låda",
+    "default_room": "14_forvarings_rummet",
+    "all_rooms": true
+  },
+  "hink.png": {
+    "type": "item",
+    "label": "Hink",
+    "default_room": "14_forvarings_rummet",
+    "all_rooms": true
+  },
+  "fackla.png": {
+    "type": "item",
+    "label": "Fackla",
+    "default_room": "08_eldstaden_av_tegel",
+    "all_rooms": true
+  },
+  "spikar.png": {
+    "type": "item",
+    "label": "Spikar",
+    "default_room": "15_takskagget",
+    "all_rooms": true
+  },
+  "eld_kamin.png": {
+    "type": "state",
+    "label": "Eld i kamin",
+    "home_rooms": [
+      "02_lasrummet",
+      "08_eldstaden_av_tegel"
+    ],
+    "all_rooms": false
+  },
+  "aska.png": {
+    "type": "state",
+    "label": "Aska",
+    "home_rooms": [
+      "02_lasrummet",
+      "08_eldstaden_av_tegel"
+    ],
+    "all_rooms": false
+  },
+  "eldstad_sonderslagen.png": {
+    "type": "state",
+    "label": "Sönderslagen eldstad",
+    "home_rooms": [
+      "08_eldstaden_av_tegel"
+    ],
+    "all_rooms": false
+  },
+  "dörr_öppen.png": {
+    "type": "state",
+    "label": "Öppen dörr",
+    "home_rooms": [
+      "17_sido_rummet"
+    ],
+    "all_rooms": false
+  },
+  "vampyr_i_kista.png": {
+    "type": "state",
+    "label": "Vampyr i kista",
+    "home_rooms": [
+      "18_wampyrernas_grav"
+    ],
+    "all_rooms": false
+  },
+  "gobelas_fallen.png": {
+    "type": "state",
+    "label": "Gobeläng fallen",
+    "home_rooms": [
+      "16_galleriet"
+    ],
+    "all_rooms": false
+  },
+  "ekan_vid_strand.png": {
+    "type": "state",
+    "label": "Ekan vid strand",
+    "home_rooms": [
+      "11_sjo_slott",
+      "11_sjo_kapell"
+    ],
+    "all_rooms": false
+  },
+  "dorr_stangd.png": {
+    "type": "state",
+    "label": "Stängd dörr",
+    "home_rooms": [
+      "17_sido_rummet"
+    ],
+    "all_rooms": false
+  },
+  "kista_stangd.png": {
+    "type": "state",
+    "label": "Stängd kista",
+    "home_rooms": [
+      "18_wampyrernas_grav"
+    ],
+    "all_rooms": false
+  },
+  "vampyr_dad.png": {
+    "type": "state",
+    "label": "Död vampyr",
+    "home_rooms": [
+      "18_wampyrernas_grav"
+    ],
+    "all_rooms": false
+  },
+  "vampyr_vaknar.png": {
+    "type": "state",
+    "label": "Vampyr vaknar",
+    "home_rooms": [
+      "18_wampyrernas_grav"
+    ],
+    "all_rooms": false
+  },
+  "gobelang_hangande.png": {
+    "type": "state",
+    "label": "Gobeläng hängande",
+    "home_rooms": [
+      "16_galleriet"
+    ],
+    "all_rooms": false
+  },
+  "balkong_med_rep.png": {
+    "type": "state",
+    "label": "Balkong med rep",
+    "home_rooms": [
+      "05_tornet"
+    ],
+    "all_rooms": false
+  }
 }
