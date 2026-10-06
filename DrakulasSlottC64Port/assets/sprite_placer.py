@@ -306,17 +306,74 @@ class Placer:
         screen.fill((0, 0, 0))
         screen.blit(surf, (0, 0))
 
+        # Typ-badge (övre vänstra hörnet)
+        sname = self.sprites[self.si]
+        stype = (sprite_cfg or {}).get(sname, {}).get("type", "?")
+        BADGE = {"item": ((60, 40, 0), (255, 200, 60)), "state": ((20, 20, 80), (140, 160, 255))}
+        bg_c, fg_c = BADGE.get(stype, ((40, 40, 40), (200, 200, 200)))
+        badge_txt  = font.render(f" {'PLOCKVARA' if stype == 'item' else 'HÄNDELSE'} ", True, fg_c)
+        bw, bh     = badge_txt.get_size()
+        pygame.draw.rect(screen, bg_c, (8, 8, bw + 4, bh + 4), border_radius=4)
+        screen.blit(badge_txt, (10, 10))
+
         pct_x  = (self.sx + self.sw // 2) / self.rw * 100
         pct_y  = (self.sy + self.sh // 2) / self.rh * 100
-        sname  = self.sprites[self.si]
-        stype  = (sprite_cfg or {}).get(sname, {}).get("type", "?")
         status = (f"  [{stype}] {self.rooms[self.ri]}  +  {sname}"
                   f"   px({self.sx},{self.sy})  {pct_x:.1f}%,{pct_y:.1f}%"
                   f"   skala {self.scale*100:.0f}%   rot {self.rotation}°"
-                  f"   +/- storlek   ,/. rotera   ↑↓←→ 1px  Shift=10px   dra med mus   R/P byt   S spara   Esc")
+                  f"   +/- storlek   ,/. rotera   ↑↓←→ 1px  Shift=10px   dra   R/P byt   Space=alla   S spara   Esc")
         lbl = font.render(status, True, (200, 200, 200))
         pygame.draw.rect(screen, (20, 20, 20), (0, self.disp_h, WIN_W, PANEL_H))
         screen.blit(lbl, (4, self.disp_h + 7))
+        pygame.display.flip()
+
+    def render_all(self, screen: "pygame.Surface", font: "pygame.Font",
+                   sprite_cfg: dict | None = None):
+        """Visa alla sparade sprites för aktuellt rum på en gång."""
+        pos_data  = load_positions()
+        room_base = os.path.splitext(self.rooms[self.ri])[0]
+        cfg       = sprite_cfg or {}
+
+        result = self.room_img.copy().convert("RGBA")
+        count  = 0
+        for key, entry in pos_data.items():
+            if not key.startswith(room_base + "__"):
+                continue
+            sprite_name = key[len(room_base) + 2:] + ".png"
+            sprite_path = os.path.join(SPRITES_DIR, sprite_name)
+            if not os.path.exists(sprite_path):
+                continue
+            sc  = entry.get("scale", SCALE_DEFAULT)
+            rot = entry.get("rotation", 0)
+            sx, sy = entry["px"]
+            spr = build_sprite(sprite_name, self.rh, sc)
+            if rot % 360 != 0:
+                spr = spr.rotate(-rot, expand=True, resample=Image.BICUBIC)
+            result.paste(spr, (sx, sy), spr)
+            count += 1
+
+        surf = pil_to_surf(result.convert("RGB"), self.disp_w, self.disp_h)
+        screen.fill((0, 0, 0))
+        screen.blit(surf, (0, 0))
+
+        # Räkna per typ
+        n_item  = sum(1 for k in pos_data if k.startswith(room_base + "__")
+                      and cfg.get(k[len(room_base)+2:]+".png", {}).get("type") == "item")
+        n_state = sum(1 for k in pos_data if k.startswith(room_base + "__")
+                      and cfg.get(k[len(room_base)+2:]+".png", {}).get("type") == "state")
+
+        status = (f"  RUMSÖVERSIKT: {self.rooms[self.ri]}"
+                  f"   {count} sprites  ({n_item} item, {n_state} state)"
+                  f"   Space / valfri tangent = tillbaka till redigering")
+        lbl = font.render(status, True, (200, 200, 200))
+        pygame.draw.rect(screen, (20, 20, 20), (0, self.disp_h, WIN_W, PANEL_H))
+        screen.blit(lbl, (4, self.disp_h + 7))
+
+        # Badge uppe till vänster
+        badge = font.render(f"  ALLA SPRITES — {self.rooms[self.ri]}  ", True, (255, 255, 200))
+        bw, bh = badge.get_size()
+        pygame.draw.rect(screen, (60, 40, 10), (8, 8, bw + 4, bh + 4), border_radius=4)
+        screen.blit(badge, (10, 10))
         pygame.display.flip()
 
     def save(self):
@@ -372,10 +429,11 @@ def main():
     clock      = pygame.time.Clock()
     sprite_cfg = load_sprite_config()
 
-    MODE_SELECT  = "select"
-    MODE_PLACE   = "place"
-    mode         = MODE_SELECT
-    focus        = 0
+    MODE_SELECT   = "select"
+    MODE_PLACE    = "place"
+    MODE_OVERVIEW = "overview"
+    mode          = MODE_SELECT
+    focus         = 0
     placer: Placer | None = None
 
     def draw_select():
@@ -414,6 +472,13 @@ def main():
                         continue
                     draw_select()
 
+                # ── Översikt ──
+                elif mode == MODE_OVERVIEW and placer:
+                    # Valfri tangent går tillbaka till redigering
+                    mode = MODE_PLACE
+                    placer.render(screen, font, sprite_cfg)
+                    continue
+
                 # ── Placering ──
                 elif mode == MODE_PLACE and placer:
                     step = 10 if shift else 1
@@ -429,6 +494,10 @@ def main():
                         placer.rotate(1 if shift else 15)
                     elif event.key == pygame.K_COMMA:
                         placer.rotate(-1 if shift else -15)
+                    elif event.key == pygame.K_SPACE:
+                        mode = MODE_OVERVIEW
+                        placer.render_all(screen, font, sprite_cfg)
+                        continue
                     elif event.key == pygame.K_r:
                         placer.cycle_room(-1 if shift else 1)
                     elif event.key == pygame.K_p:
@@ -445,6 +514,11 @@ def main():
                     else:
                         continue
                     placer.render(screen, font, sprite_cfg)
+
+            # ── Klick i översiktsläget → tillbaka ──
+            elif event.type == pygame.MOUSEBUTTONDOWN and mode == MODE_OVERVIEW and placer:
+                mode = MODE_PLACE
+                placer.render(screen, font, sprite_cfg)
 
             # ── Mus-drag (bara i placeringsläget) ──
             elif event.type == pygame.MOUSEBUTTONDOWN and mode == MODE_PLACE and placer:
